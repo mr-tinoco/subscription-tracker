@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen py-8 px-4">
+    <div class="max-w-2xl mx-auto">
+        <!-- Page Title -->
+        <h1 class="text-4xl font-bold text-gray-800 text-center mb-8">Subscription Tracker</h1>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <form id="subscription-form" class="space-y-4">
+                <!-- Subscription Name Input -->
+                <div>
+                    <label for="subscription-name" class="block text-sm font-medium text-gray-700 mb-2">
+                        Subscription Name
+                    </label>
+                    <input
+                        type="text"
+                        id="subscription-name"
+                        placeholder="Netflix, Spotify, etc."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    >
+                </div>
+
+                <!-- Monthly Cost Input -->
+                <div>
+                    <label for="monthly-cost" class="block text-sm font-medium text-gray-700 mb-2">
+                        Monthly Cost
+                    </label>
+                    <input
+                        type="number"
+                        id="monthly-cost"
+                        placeholder="9.99"
+                        step="0.01"
+                        min="0"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    >
+                </div>
+
+                <!-- Add Subscription Button -->
+                <button
+                    type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.02]"
+                >
+                    Add Subscription
+                </button>
+            </form>
+        </div>
+
+        <!-- Subscriptions List -->
+        <div id="subscriptions-list" class="mb-6"></div>
+
+        <!-- Total Display -->
+        <div id="total-display"></div>
+    </div>
+</body>
+</html>
