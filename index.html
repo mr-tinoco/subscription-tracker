@@ -6,48 +6,83 @@
     <title>Subscription Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen py-8 px-4">
-    <div class="max-w-2xl mx-auto">
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8 px-4 sm:py-12">
+    <div class="max-w-3xl mx-auto">
         <!-- Page Title -->
-        <h1 class="text-4xl font-bold text-gray-800 text-center mb-8">Subscription Tracker</h1>
+        <div class="text-center mb-10">
+            <div class="inline-block p-3 bg-blue-100 rounded-full mb-4">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-2">Subscription Tracker</h1>
+            <p class="text-gray-600">Manage and track all your subscriptions in one place</p>
+        </div>
 
         <!-- Form Card -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <form id="subscription-form" class="space-y-4">
+        <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 mb-8 border border-gray-100">
+            <form id="subscription-form" class="space-y-5">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">Add New Subscription</h2>
+
                 <!-- Subscription Name Input -->
                 <div>
-                    <label for="subscription-name" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="subscription-name" class="block text-sm font-semibold text-gray-700 mb-2">
                         Subscription Name
                     </label>
                     <input
                         type="text"
                         id="subscription-name"
                         placeholder="Netflix, Spotify, etc."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 hover:border-gray-300"
+                        required
                     >
                 </div>
 
-                <!-- Monthly Cost Input -->
-                <div>
-                    <label for="monthly-cost" class="block text-sm font-medium text-gray-700 mb-2">
-                        Monthly Cost
-                    </label>
-                    <input
-                        type="number"
-                        id="monthly-cost"
-                        placeholder="9.99"
-                        step="0.01"
-                        min="0"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    >
+                <!-- Two Column Layout for Cost and Billing Cycle -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Cost Input -->
+                    <div>
+                        <label for="subscription-cost" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Cost ($)
+                        </label>
+                        <input
+                            type="number"
+                            id="subscription-cost"
+                            placeholder="9.99"
+                            step="0.01"
+                            min="0"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 hover:border-gray-300"
+                            required
+                        >
+                    </div>
+
+                    <!-- Billing Cycle Selector -->
+                    <div>
+                        <label for="billing-cycle" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Billing Cycle
+                        </label>
+                        <select
+                            id="billing-cycle"
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white transition-all duration-200 hover:border-gray-300 cursor-pointer"
+                        >
+                            <option value="monthly">Monthly</option>
+                            <option value="yearly">Yearly</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Add Subscription Button -->
                 <button
                     type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.02]"
+                    class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3.5 px-6 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] mt-6"
                 >
-                    Add Subscription
+                    <span class="flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Add Subscription
+                    </span>
                 </button>
             </form>
         </div>
@@ -58,5 +93,8 @@
         <!-- Total Display -->
         <div id="total-display"></div>
     </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
