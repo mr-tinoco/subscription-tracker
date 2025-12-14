@@ -64,6 +64,11 @@ function addSubscription(name, cost, billingCycle = 'monthly') {
     };
 
     subscriptions.push(subscription);
+
+    // Debug logging
+    console.log('Added:', subscription);
+    console.log('All subscriptions:', subscriptions);
+
     saveSubscriptions();
     renderSubscriptions();
     renderTotal();
