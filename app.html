@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubTracker — Your Subscription Budget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body id="app-body" class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8 px-4 sm:py-12 transition-all duration-500">
+    <div class="max-w-3xl mx-auto">
+
+        <!-- Top Controls -->
+        <div class="flex justify-end gap-3 mb-4">
+            <button id="dark-mode-toggle" onclick="toggleDarkMode()"
+                class="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300">
+                <span id="dark-mode-icon">🌙</span>
+                <span id="dark-mode-text" class="font-medium text-gray-700 hidden sm:inline">Dark</span>
+            </button>
+            <button id="lang-toggle" onclick="toggleLanguage()"
+                class="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300">
+                <span id="lang-flag">🇺🇸</span>
+                <span id="lang-text" class="font-medium text-gray-700">English</span>
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Page Title -->
+        <div class="text-center mb-8">
+            <div id="icon-container" class="inline-block p-3 bg-blue-100 rounded-full mb-4 transition-all duration-300">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                </svg>
+            </div>
+            <h1 id="page-title" class="text-4xl sm:text-5xl font-bold text-gray-800 mb-2 transition-colors duration-300">SubTracker</h1>
+            <p id="page-subtitle" class="text-gray-600 transition-colors duration-300">Subscriptions, budget &amp; cash flow — all in one place</p>
+        </div>
+
+        <!-- TAB NAVIGATION -->
+        <div id="tab-nav" class="flex bg-white rounded-xl shadow-lg p-1.5 mb-6 border border-gray-100 gap-1">
+            <button onclick="switchTab('subscriptions')" id="tab-btn-subscriptions"
+                class="flex-1 py-2.5 px-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-blue-600 text-white shadow-md">
+                <span id="tab-label-subscriptions">📋 Subscriptions</span>
+            </button>
+            <button onclick="switchTab('budget')" id="tab-btn-budget"
+                class="flex-1 py-2.5 px-2 rounded-lg font-semibold text-sm transition-all duration-200 text-gray-600 hover:bg-gray-100">
+                <span id="tab-label-budget">💰 Budget</span>
+            </button>
+            <button onclick="switchTab('overview')" id="tab-btn-overview"
+                class="flex-1 py-2.5 px-2 rounded-lg font-semibold text-sm transition-all duration-200 text-gray-600 hover:bg-gray-100">
+                <span id="tab-label-overview">📊 Overview</span>
+            </button>
+        </div>
+
+        <!-- ===== TAB: SUBSCRIPTIONS ===== -->
+        <div id="tab-content-subscriptions">
+            <div id="form-card" class="bg-white rounded-xl shadow-lg p-6 sm:p-8 mb-8 border border-gray-100 transition-all duration-300">
+                <form id="subscription-form" class="space-y-5">
+                    <h2 id="form-title" class="text-xl font-semibold text-gray-800 mb-6">Add New Subscription</h2>
+                    <input type="hidden" id="edit-id" value="">
+                    <div>
+                        <label id="label-name" for="subscription-name" class="block text-sm font-semibold text-gray-700 mb-2">Subscription Name</label>
+                        <input type="text" id="subscription-name" placeholder="Netflix, Spotify, etc."
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 hover:border-gray-300" required>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label id="label-cost" for="subscription-cost" class="block text-sm font-semibold text-gray-700 mb-2">Cost ($)</label>
+                            <input type="number" id="subscription-cost" placeholder="9.99" step="0.01" min="0"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 hover:border-gray-300" required>
+                        </div>
+                        <div>
+                            <label id="label-cycle" for="billing-cycle" class="block text-sm font-semibold text-gray-700 mb-2">Billing Cycle</label>
+                            <select id="billing-cycle"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white transition-all duration-200 hover:border-gray-300 cursor-pointer">
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                                <option value="weekly">Weekly</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label id="label-category" for="subscription-category" class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                            <select id="subscription-category"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white transition-all duration-200 hover:border-gray-300 cursor-pointer">
+                                <option value="entertainment">🎬 Entertainment</option>
+                                <option value="software">💻 Software</option>
+                                <option value="utilities">🔌 Utilities</option>
+                                <option value="health">💪 Health &amp; Fitness</option>
+                                <option value="education">📚 Education</option>
+                                <option value="news">📰 News &amp; Media</option>
+                                <option value="gaming">🎮 Gaming</option>
+                                <option value="other">📦 Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="form-buttons" class="flex gap-3 mt-6">
+                        <button type="submit" id="submit-btn"
+                            class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3.5 px-6 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]">
+                            <span id="submit-btn-text" class="flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Add Subscription
+                            </span>
+                        </button>
+                        <button type="button" id="cancel-btn" onclick="cancelEdit()"
+                            class="hidden px-6 py-3.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-all duration-200">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="filter-section" class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 border border-gray-100 transition-all duration-300">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex-1">
+                        <div class="relative">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <input type="text" id="search-input" placeholder="Search subscriptions..." oninput="handleSearch()"
+                                class="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 hover:border-gray-300">
+                        </div>
+                    </div>
+                    <div class="sm:w-48">
+                        <select id="filter-category" onchange="handleFilter()"
+                            class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white transition-all duration-200 hover:border-gray-300 cursor-pointer">
+                            <option value="all" id="filter-all">All Categories</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="software">💻 Software</option>
+                            <option value="utilities">🔌 Utilities</option>
+                            <option value="health">💪 Health &amp; Fitness</option>
+                            <option value="education">📚 Education</option>
+                            <option value="news">📰 News &amp; Media</option>
+                            <option value="gaming">🎮 Gaming</option>
+                            <option value="other">📦 Other</option>
+                        </select>
+                    </div>
+                    <button type="button" id="export-btn" onclick="exportToCSV()"
+                        class="px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg whitespace-nowrap">
+                        <span class="flex items-center justify-center">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span id="export-btn-text">Export CSV</span>
+                        </span>
+                    </button>
+                </div>
+                <div id="active-filters" class="hidden mt-3 flex flex-wrap gap-2"></div>
+            </div>
+
+            <div id="subscriptions-list" class="mb-6"></div>
+            <div id="total-display"></div>
+
+            <div id="charts-section" class="mt-6 bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-100 transition-all duration-300">
+                <h2 id="charts-title" class="text-xl font-semibold text-gray-800 mb-6 text-center">Spending by Category</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="relative" style="height: 300px;"><canvas id="category-pie-chart"></canvas></div>
+                    <div class="relative" style="height: 300px;"><canvas id="category-bar-chart"></canvas></div>
+                </div>
+                <p id="charts-empty" class="hidden text-center text-gray-500 py-8">Add subscriptions to see spending charts</p>
+            </div>
+        </div>
+
+        <!-- ===== TAB: BUDGET ===== -->
+        <div id="tab-content-budget" class="hidden">
+
+            <!-- Income Card -->
+            <div id="income-card" class="bg-white rounded-xl shadow-lg p-6 sm:p-8 mb-6 border border-gray-100 transition-all duration-300">
+                <h2 id="income-card-title" class="text-xl font-semibold text-gray-800 mb-1">💵 Monthly Income</h2>
+                <p id="income-card-desc" class="text-sm text-gray-500 mb-4">Set your monthly take-home pay to track cash flow.</p>
+                <div class="flex gap-3">
+                    <div class="relative flex-1">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold">$</span>
+                        <input type="number" id="income-input" placeholder="6000" step="100" min="0"
+                            class="w-full pl-8 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all hover:border-gray-300">
+                    </div>
+                    <button onclick="saveIncome()" id="income-save-btn"
+                        class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105 active:scale-95 shadow-md">
+                        <span id="income-save-text">Save</span>
+                    </button>
+                </div>
+                <div id="income-display" class="hidden mt-3 flex items-center gap-2 text-green-600 font-semibold text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span id="income-display-text"></span>
+                </div>
+            </div>
+
+            <!-- Add Expense Form -->
+            <div id="spending-form-card" class="bg-white rounded-xl shadow-lg p-6 sm:p-8 mb-6 border border-gray-100 transition-all duration-300">
+                <h2 id="spending-form-title" class="text-xl font-semibold text-gray-800 mb-6">➕ Add Expense</h2>
+                <input type="hidden" id="spending-edit-id" value="">
+                <form id="spending-form" class="space-y-4">
+                    <div>
+                        <label id="label-expense-name" class="block text-sm font-semibold text-gray-700 mb-2">Expense Name</label>
+                        <input type="text" id="spending-name" placeholder="Groceries, Gas, Rent..."
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all hover:border-gray-300" required>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label id="label-expense-amount" class="block text-sm font-semibold text-gray-700 mb-2">Amount ($)</label>
+                            <input type="number" id="spending-amount" placeholder="50.00" step="0.01" min="0"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all hover:border-gray-300" required>
+                        </div>
+                        <div>
+                            <label id="label-expense-category" class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                            <select id="spending-category"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white transition-all hover:border-gray-300 cursor-pointer">
+                                <option value="housing">🏠 Housing</option>
+                                <option value="food">🍕 Food &amp; Dining</option>
+                                <option value="transport">🚗 Transport</option>
+                                <option value="health">🏥 Health</option>
+                                <option value="shopping">🛍️ Shopping</option>
+                                <option value="entertainment">🎉 Fun &amp; Hobbies</option>
+                                <option value="bills">📄 Bills</option>
+                                <option value="tech">📱 Technology</option>
+                                <option value="travel">✈️ Travel</option>
+                                <option value="other">📦 Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label id="label-expense-date" class="block text-sm font-semibold text-gray-700 mb-2">Date</label>
+                            <input type="date" id="spending-date"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all hover:border-gray-300">
+                        </div>
+                    </div>
+                    <div>
+                        <label id="label-expense-note" class="block text-sm font-semibold text-gray-700 mb-2">Note (optional)</label>
+                        <input type="text" id="spending-note" placeholder="Add a note..."
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all hover:border-gray-300">
+                    </div>
+                    <div class="flex gap-3 mt-6">
+                        <button type="submit" id="spending-submit-btn"
+                            class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3.5 px-6 rounded-lg transition-all transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]">
+                            <span id="spending-submit-text" class="flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Add Expense
+                            </span>
+                        </button>
+                        <button type="button" id="spending-cancel-btn" onclick="cancelSpendingEdit()"
+                            class="hidden px-6 py-3.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-all">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- This Month Quick Stats -->
+            <div id="budget-month-stats" class="mb-6"></div>
+
+            <!-- Spending Entries List -->
+            <div id="spending-list" class="mb-6"></div>
+        </div>
+
+        <!-- ===== TAB: OVERVIEW ===== -->
+        <div id="tab-content-overview" class="hidden">
+            <!-- Cash Flow Hero -->
+            <div id="cashflow-hero" class="mb-6"></div>
+            <!-- Breakdown Cards -->
+            <div id="overview-breakdown" class="mb-6"></div>
+            <!-- Charts -->
+            <div id="overview-chart-card" class="bg-white rounded-xl shadow-lg p-6 border border-gray-100 mb-6 transition-all duration-300">
+                <h2 id="overview-chart-title" class="text-xl font-semibold text-gray-800 mb-6 text-center">Spending Breakdown</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="relative" style="height: 300px;"><canvas id="overview-spending-pie"></canvas></div>
+                    <div class="relative" style="height: 300px;"><canvas id="overview-spending-bar"></canvas></div>
+                </div>
+                <p id="overview-chart-empty" class="hidden text-center text-gray-500 py-8">Add expenses and subscriptions to see the overview</p>
+            </div>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

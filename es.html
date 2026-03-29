@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Suscripciones — Deja de Regalar Plata</title>
+    <meta name="description" content="Controla todas las suscripciones que pagas. Ve cuánto gastas al mes. Sin cuenta, sin nube, sin complicaciones. Solo ábrelo y listo.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mockup-card {
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-8px); }
+        }
+
+        .icon-glow {
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.25);
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-800 font-sans antialiased">
+
+<!-- ============================================================
+     NAV BAR
+============================================================ -->
+<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+
+        <!-- Logo + marca -->
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+            </div>
+            <span class="font-bold text-gray-900 text-lg">SubTracker</span>
+            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium ml-1">por Normie AI</span>
+        </div>
+
+        <!-- Derecha: toggle de idioma + CTA -->
+        <div class="flex items-center gap-3">
+            <!-- Cambiar a inglés -->
+            <a href="index.html"
+               class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-sm font-medium text-gray-600">
+                <span>🇺🇸</span>
+                <span class="hidden sm:inline">English</span>
+            </a>
+            <!-- Abrir la app -->
+            <a href="app.html?lang=es"
+               class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95">
+                Abrir App →
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center">
+
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-sm font-medium px-4 py-2 rounded-full mb-8 border border-blue-200">
+        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+        Gratis · Sin registro · Funciona sin internet
+    </div>
+
+    <!-- Titular principal -->
+    <h1 class="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+        Deja de regalar plata en<br>
+        <span class="gradient-text">suscripciones olvidadas</span>
+    </h1>
+
+    <!-- Subtítulo -->
+    <p class="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Agrega todas las suscripciones que pagas. Ve el total real en pesos o dólares.
+        Sin cuenta. Sin nube. Sin vuelta. Ábrelo en el navegador y ya.
+    </p>
+
+    <!-- Botones CTA -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <!-- Primario: abrir la app en español -->
+        <a href="app.html?lang=es"
+           class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-8 py-4 rounded-xl transition-all duration-200 hover:shadow-xl active:scale-95">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Pruébalo Gratis
+        </a>
+
+        <!-- Secundario: Gumroad -->
+        <a href="https://gumroad.com"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-bold text-lg px-8 py-4 rounded-xl transition-all duration-200 hover:shadow-lg active:scale-95">
+            <svg class="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.1 0C4.8 0 0 4.8 0 11.1c0 4.9 3.2 9.2 7.7 10.7v-2.9c-2.9-1.4-4.9-4.3-4.9-7.8 0-4.7 3.8-8.5 8.5-8.5 4.7 0 8.5 3.8 8.5 8.5 0 3.5-2 6.4-4.9 7.8v2.9C19.4 20.3 22.2 16 22.2 11.1 22.2 4.8 17.4 0 11.1 0z"/>
+            </svg>
+            Consíguelo en Gumroad
+        </a>
+    </div>
+
+    <!-- Prueba social -->
+    <p class="text-sm text-gray-400 mt-6">
+        Hecho por una persona real. Sin inversores. Sin rastreo. Sin pendejadas.
+    </p>
+</section>
+
+
+<!-- ============================================================
+     MOCKUP DE LA APP
+============================================================ -->
+<section class="bg-gradient-to-b from-gray-50 to-white py-16">
+    <div class="max-w-4xl mx-auto px-6">
+
+        <p class="text-center text-sm font-semibold text-blue-600 uppercase tracking-widest mb-4">Así Se Ve</p>
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Todo en una sola pantalla</h2>
+
+        <!-- Ventana del navegador (mockup) -->
+        <div class="mockup-card bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+
+            <!-- Barra del navegador falsa -->
+            <div class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+                <div class="flex gap-1.5">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div class="flex-1 bg-white rounded-md text-xs text-gray-400 px-3 py-1.5 text-center border border-gray-200">
+                    yoursite.vercel.app/app?lang=es
+                </div>
+            </div>
+
+            <!-- Contenido de la app (mockup en español) -->
+            <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+
+                <!-- Título de la app -->
+                <div class="text-center mb-5">
+                    <div class="inline-block p-2 bg-blue-100 rounded-full mb-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Control de Suscripciones</h3>
+                    <p class="text-xs text-gray-500">Administra y controla todas tus suscripciones en un solo lugar</p>
+                </div>
+
+                <!-- Tarjetas de suscripciones (en español, en pesos) -->
+                <div class="space-y-2 mb-4">
+                    <div class="bg-white rounded-lg p-3 flex items-center justify-between border border-gray-100 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="text-lg">🎬</span>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm">Netflix</p>
+                                <p class="text-xs text-gray-400">Mensual · Entretenimiento</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-gray-800 text-sm">$66.359</p>
+                            <p class="text-xs text-gray-400">por mes</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 flex items-center justify-between border border-gray-100 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="text-lg">💻</span>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm">GitHub Pro</p>
+                                <p class="text-xs text-gray-400">Anual · Software</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-gray-800 text-sm">$15.221</p>
+                            <p class="text-xs text-gray-400">por mes</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 flex items-center justify-between border border-gray-100 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span class="text-lg">🎵</span>
+                            <div>
+                                <p class="font-semibold text-gray-800 text-sm">Spotify</p>
+                                <p class="text-xs text-gray-400">Mensual · Entretenimiento</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-gray-800 text-sm">$41.459</p>
+                            <p class="text-xs text-gray-400">por mes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total en pesos colombianos -->
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-4 text-white text-center shadow-lg">
+                    <p class="text-xs uppercase tracking-widest opacity-80 mb-1">Gasto Total Mensual</p>
+                    <p class="text-3xl font-extrabold">$123.039</p>
+                    <p class="text-xs opacity-70 mt-1">$1.476.468 / año · 3 suscripciones</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leyenda debajo del mockup -->
+        <p class="text-center text-sm text-gray-400 mt-4">
+            ↑ Esta es una vista previa — <a href="app.html?lang=es" class="text-blue-600 hover:underline font-medium">abre la app real</a> para empezar a controlar
+        </p>
+    </div>
+</section>
+
+
+<!-- ============================================================
+     CARACTERÍSTICAS
+============================================================ -->
+<section class="max-w-5xl mx-auto px-6 py-20" id="funciones">
+
+    <p class="text-center text-sm font-semibold text-blue-600 uppercase tracking-widest mb-4">Funciones</p>
+    <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Todo lo que necesitas. Nada de lo que no.</h2>
+    <p class="text-center text-gray-500 mb-14 max-w-xl mx-auto">Sin cuentas. Sin app store. Sin suscripción mensual. Solo abre el link y controla tus gastos.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+        <!-- Función 1 -->
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 icon-glow">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Ve cuánto gastas de verdad</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                Agrega suscripciones mensuales, anuales y semanales. La app convierte todo a un total mensual en pesos o dólares — sin que tengas que hacer cuentas.
+            </p>
+        </div>
+
+        <!-- Función 2 -->
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Gráficas por categoría</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                Visualiza en qué te vas la plata: entretenimiento, software, salud, educación y más. Torta y barras para que veas de un vistazo dónde se va todo.
+            </p>
+        </div>
+
+        <!-- Función 3 -->
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Exporta a Excel</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                Descarga tu lista completa como un archivo CSV. Ábrelo en Excel o Google Sheets. Tus datos, tu formato, en tu mano.
+            </p>
+        </div>
+
+        <!-- Función 4 -->
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Privado por defecto</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+                Todo se guarda en tu propio navegador. Sin cuenta, sin servidor, sin que nadie vea lo que pagas — ni nosotros. Tus datos nunca salen de tu dispositivo.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ============================================================
+     CÓMO FUNCIONA — 3 pasos
+============================================================ -->
+<section class="bg-gray-50 py-20">
+    <div class="max-w-4xl mx-auto px-6">
+
+        <p class="text-center text-sm font-semibold text-blue-600 uppercase tracking-widest mb-4">Cómo Funciona</p>
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-14">Listo en menos de un minuto</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+
+            <!-- Paso 1 -->
+            <div class="text-center">
+                <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4 shadow-lg">
+                    1
+                </div>
+                <h3 class="font-bold text-gray-900 text-lg mb-2">Abre la app</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Dale clic a "Pruébalo Gratis". Sin descargar, sin instalar, sin registrarte. Carga al instante en el navegador.</p>
+            </div>
+
+            <!-- Paso 2 -->
+            <div class="text-center">
+                <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4 shadow-lg">
+                    2
+                </div>
+                <h3 class="font-bold text-gray-900 text-lg mb-2">Agrega tus suscripciones</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Escribe el nombre, el costo, la frecuencia y la categoría. Unos 10 segundos por suscripción, sin más.</p>
+            </div>
+
+            <!-- Paso 3 -->
+            <div class="text-center">
+                <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4 shadow-lg">
+                    3
+                </div>
+                <h3 class="font-bold text-gray-900 text-lg mb-2">Descubre lo que gastas</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">El total mensual se actualiza en tiempo real. La sorpresa al ver el número es normal — para eso existe esto.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================
+     CTA FINAL
+============================================================ -->
+<section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-20">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+        <h2 class="text-4xl font-extrabold text-white mb-4 leading-tight">
+            ¿Listo para saber el número real?
+        </h2>
+        <p class="text-blue-100 text-lg mb-10 max-w-xl mx-auto">
+            La mayoría de las personas subestima lo que gasta en suscripciones. Dos minutos para descubrirlo.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="app.html?lang=es"
+               class="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-blue-700 font-bold text-lg px-10 py-4 rounded-xl transition-all duration-200 hover:shadow-2xl active:scale-95">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Abrir la App — Es Gratis
+            </a>
+            <a href="https://gumroad.com"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="inline-flex items-center justify-center gap-2 bg-transparent border-2 border-white/50 hover:border-white text-white font-bold text-lg px-10 py-4 rounded-xl transition-all duration-200 active:scale-95">
+                Consíguelo en Gumroad
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+
+            <!-- Marca -->
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                </div>
+                <span class="font-bold text-gray-300">SubTracker</span>
+                <span class="text-gray-600">·</span>
+                <span class="text-sm text-gray-500">por Normie AI</span>
+            </div>
+
+            <!-- Links -->
+            <div class="flex items-center gap-6 text-sm">
+                <a href="app.html?lang=es" class="hover:text-white transition-colors">Abrir App</a>
+                <a href="index.html" class="hover:text-white transition-colors">English</a>
+                <a href="https://github.com/mr-tinoco/subscription-tracker"
+                   target="_blank" rel="noopener noreferrer"
+                   class="hover:text-white transition-colors">GitHub</a>
+                <a href="https://gumroad.com"
+                   target="_blank" rel="noopener noreferrer"
+                   class="hover:text-white transition-colors">Gumroad</a>
+            </div>
+
+            <!-- Hecho con amor -->
+            <p class="text-sm text-gray-600">
+                Hecho con ☕ + Claude Code · 2026
+            </p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
