@@ -6,6 +6,20 @@
     <title>SubTracker — Your Subscription Budget</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Zombie Shredder — delete animation */
+        @keyframes zombie-shred {
+            0%   { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0px); }
+            20%  { transform: scale(1.04) rotate(-1.5deg); background-color: rgba(239,68,68,0.12); }
+            50%  { transform: scale(0.97) skewX(6deg) rotate(1deg); opacity: 0.55; filter: blur(1px); }
+            80%  { transform: scale(0.5) skewX(14deg); opacity: 0.15; filter: blur(3px); }
+            100% { transform: scale(0) skewX(20deg); opacity: 0; filter: blur(6px); }
+        }
+        .zombie-shred {
+            animation: zombie-shred 0.45s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body id="app-body" class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8 px-4 sm:py-12 transition-all duration-500">
     <div class="max-w-3xl mx-auto">
@@ -17,11 +31,23 @@
                 <span id="dark-mode-icon">🌙</span>
                 <span id="dark-mode-text" class="font-medium text-gray-700 hidden sm:inline">Dark</span>
             </button>
+            <!-- Currency dropdown — independent of language -->
+            <select id="currency-toggle" onchange="selectCurrency(this.value)"
+                class="px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 font-medium text-gray-700 cursor-pointer outline-none appearance-none pr-8"
+                style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236b7280%22 stroke-width=%222%22><path d=%22M6 9l6 6 6-6%22/></svg>'); background-repeat: no-repeat; background-position: right 10px center;">
+                <option value="USD">🇺🇸 USD</option>
+                <option value="COP">🇨🇴 COP</option>
+                <option value="MXN">🇲🇽 MXN</option>
+                <option value="ARS">🇦🇷 ARS</option>
+                <option value="EUR">🇪🇺 EUR</option>
+                <option value="CRC">🇨🇷 CRC</option>
+                <option value="CLP">🇨🇱 CLP</option>
+            </select>
             <button id="lang-toggle" onclick="toggleLanguage()"
                 class="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300">
                 <span id="lang-flag">🇺🇸</span>
                 <span id="lang-text" class="font-medium text-gray-700">English</span>
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
                 </svg>
             </button>

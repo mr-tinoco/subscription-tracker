@@ -4,6 +4,7 @@
 let subscriptions = [];
 let filteredSubscriptions = []; // For search/filter results
 let currentLanguage = 'en'; // 'en' or 'es'
+let currentCurrency = 'USD'; // 'USD' or 'COP' — independent of language
 let darkMode = false; // Dark mode state
 let editingId = null; // Track which subscription is being edited
 let currentSearchTerm = '';
@@ -21,28 +22,31 @@ let editingSpendingId = null;
 let pieChart = null;
 let barChart = null;
 
-// Currency settings
+// Currency settings — all amounts stored internally as USD
 const currencies = {
-    USD: { symbol: '$', code: 'USD', rate: 1, locale: 'en-US' },
-    COP: { symbol: '$', code: 'COP', rate: 4150, locale: 'es-CO' } // ~4150 COP per USD
+    USD: { symbol: '$',  code: 'USD', rate: 1,     locale: 'en-US', flag: '🇺🇸', decimals: 2 },
+    COP: { symbol: '$',  code: 'COP', rate: 4150,  locale: 'es-CO', flag: '🇨🇴', decimals: 0 },
+    MXN: { symbol: '$',  code: 'MXN', rate: 17.5,  locale: 'es-MX', flag: '🇲🇽', decimals: 0 },
+    ARS: { symbol: '$',  code: 'ARS', rate: 1000,  locale: 'es-AR', flag: '🇦🇷', decimals: 0 },
+    EUR: { symbol: '€',  code: 'EUR', rate: 0.92,  locale: 'de-DE', flag: '🇪🇺', decimals: 2 },
+    CRC: { symbol: '₡',  code: 'CRC', rate: 520,   locale: 'es-CR', flag: '🇨🇷', decimals: 0 },
+    CLP: { symbol: '$',  code: 'CLP', rate: 1100,  locale: 'es-CL', flag: '🇨🇱', decimals: 0 },
 };
+const currencyOrder = ['USD', 'COP', 'MXN', 'ARS', 'EUR', 'CRC', 'CLP'];
 
-// Get current currency based on language
+// Get current currency — independent of language
 function getCurrentCurrency() {
-    return currentLanguage === 'es' ? currencies.COP : currencies.USD;
+    return currencies[currentCurrency] || currencies.USD;
 }
 
-// Format currency based on current language
+// Format currency based on current currency selection
 function formatCurrency(amountUSD) {
     const currency = getCurrentCurrency();
     const convertedAmount = amountUSD * currency.rate;
-
-    if (currency.code === 'COP') {
-        // Format COP with thousands separator, no decimals
-        return currency.symbol + Math.round(convertedAmount).toLocaleString('es-CO');
+    if (currency.decimals === 0) {
+        return currency.symbol + Math.round(convertedAmount).toLocaleString(currency.locale);
     } else {
-        // Format USD with 2 decimals
-        return currency.symbol + convertedAmount.toFixed(2);
+        return currency.symbol + convertedAmount.toFixed(currency.decimals);
     }
 }
 
@@ -82,14 +86,18 @@ const budgetTranslations = {
         incomeDesc:       'Set your monthly take-home pay to track cash flow.',
         saveIncome:       'Save',
         incomeConfirm:    '✅ Income set: ',
-        addExpenseTitle:  'Add Expense',
-        expenseName:      'Expense Name',
-        expenseAmount:    'Amount ($)',
-        expenseCategory:  'Category',
-        expenseDate:      'Date',
-        expenseNote:      'Note (optional)',
-        addExpenseBtn:    'Add Expense',
-        updateExpenseBtn: 'Update Expense',
+        addExpenseTitle:          'Add Expense',
+        expenseName:              'Expense Name',
+        expenseNamePlaceholder:   'Groceries, Gas, Rent...',
+        expenseAmount:            'Amount',
+        expenseAmountPlaceholder: '50.00',
+        expenseCategory:          'Category',
+        expenseDate:              'Date',
+        expenseNote:              'Note (optional)',
+        expenseNotePlaceholder:   'Add a note...',
+        addExpenseBtn:            'Add Expense',
+        updateExpenseBtn:         'Update Expense',
+        cancelExpenseBtn:         'Cancel',
         noExpenses:       '💸 No expenses yet',
         noExpensesDesc:   'Add your first expense to start tracking your spending habits.',
         confirmDelExp:    'Delete this expense?',
@@ -113,42 +121,46 @@ const budgetTranslations = {
         spentOf:          'spent of',
     },
     es: {
-        subscriptionsTab: '📋 Suscripciones',
-        budgetTab:        '💰 Presupuesto',
-        overviewTab:      '📊 Resumen',
-        monthlyIncome:    'Ingreso Mensual',
-        incomeDesc:       'Configura tu ingreso mensual para rastrear tu flujo de caja.',
-        saveIncome:       'Guardar',
-        incomeConfirm:    '✅ Ingreso: ',
-        addExpenseTitle:  'Agregar Gasto',
-        expenseName:      'Nombre del Gasto',
-        expenseAmount:    'Monto ($)',
-        expenseCategory:  'Categoría',
-        expenseDate:      'Fecha',
-        expenseNote:      'Nota (opcional)',
-        addExpenseBtn:    'Agregar Gasto',
-        updateExpenseBtn: 'Actualizar Gasto',
-        noExpenses:       '💸 Sin gastos aún',
-        noExpensesDesc:   'Agrega tu primer gasto para comenzar a rastrear.',
-        confirmDelExp:    '¿Eliminar este gasto?',
-        editBtn:          'Editar',
-        deleteBtn:        'Eliminar',
-        cashFlowTitle:    'Flujo de Caja Mensual',
-        cashFlowGood:     '¡Estás en positivo! 💚',
-        cashFlowBad:      '¡Te pasaste del presupuesto! 🔴',
-        cashFlowNeutral:  'Configura tu ingreso para ver el flujo de caja',
-        totalIncome:      'Ingreso',
-        subsCosts:        'Suscripciones',
-        otherSpending:    'Otros Gastos',
-        netCashFlow:      'Flujo Neto',
-        overviewChart:    'Desglose de Gastos',
-        noOverviewData:   'Agrega gastos y suscripciones para ver el resumen',
-        thisMonth:        'Este Mes',
-        remaining:        'Restante',
-        spent:            'Total Gastado',
-        setIncomeFirst:   'Ve a Presupuesto y configura tu ingreso mensual',
-        perMonth:         '/mes',
-        spentOf:          'gastado de',
+        subscriptionsTab:         '📋 Suscripciones',
+        budgetTab:                '💰 Presupuesto',
+        overviewTab:              '📊 Resumen',
+        monthlyIncome:            'Ingreso Mensual',
+        incomeDesc:               'Configura tu ingreso mensual para rastrear tu flujo de caja.',
+        saveIncome:               'Guardar',
+        incomeConfirm:            '✅ Ingreso: ',
+        addExpenseTitle:          'Agregar Gasto',
+        expenseName:              'Nombre del Gasto',
+        expenseNamePlaceholder:   'Supermercado, Gasolina, Arriendo...',
+        expenseAmount:            'Monto',
+        expenseAmountPlaceholder: '50.00',
+        expenseCategory:          'Categoría',
+        expenseDate:              'Fecha',
+        expenseNote:              'Nota (opcional)',
+        expenseNotePlaceholder:   'Agrega una nota...',
+        addExpenseBtn:            'Agregar Gasto',
+        updateExpenseBtn:         'Actualizar Gasto',
+        cancelExpenseBtn:         'Cancelar',
+        noExpenses:               '💸 Sin gastos aún',
+        noExpensesDesc:           'Agrega tu primer gasto para comenzar a rastrear.',
+        confirmDelExp:            '¿Eliminar este gasto?',
+        editBtn:                  'Editar',
+        deleteBtn:                'Eliminar',
+        cashFlowTitle:            'Flujo de Caja Mensual',
+        cashFlowGood:             '¡Estás en positivo! 💚',
+        cashFlowBad:              '¡Te pasaste del presupuesto! 🔴',
+        cashFlowNeutral:          'Configura tu ingreso para ver el flujo de caja',
+        totalIncome:              'Ingreso',
+        subsCosts:                'Suscripciones',
+        otherSpending:            'Otros Gastos',
+        netCashFlow:              'Flujo Neto',
+        overviewChart:            'Desglose de Gastos',
+        noOverviewData:           'Agrega gastos y suscripciones para ver el resumen',
+        thisMonth:                'Este Mes',
+        remaining:                'Restante',
+        spent:                    'Total Gastado',
+        setIncomeFirst:           'Ve a Presupuesto y configura tu ingreso mensual',
+        perMonth:                 '/mes',
+        spentOf:                  'gastado de',
     }
 };
 
@@ -187,8 +199,8 @@ const translations = {
         noSubscriptionsDesc: 'Most people have 8–12. Start with the ones you pay every month — Netflix, Spotify, iCloud, ChatGPT.',
         noResults: '🔍 No results found',
         noResultsDesc: 'Try adjusting your search or filter criteria',
-        totalSpending: 'Monthly Budget Impact',
-        monthlyTotal: 'Monthly Budget',
+        totalSpending: 'Monthly Burn Rate',
+        monthlyTotal: 'Monthly Burn',
         yearlyTotal: 'Yearly Total',
         perMonth: 'per month',
         perYear: 'from your annual budget',
@@ -241,8 +253,8 @@ const translations = {
         noSubscriptionsDesc: '¡Agrega tu primera suscripción arriba para comenzar a rastrear tus gastos!',
         noResults: '🔍 Sin resultados',
         noResultsDesc: 'Intenta ajustar tu búsqueda o filtros',
-        totalSpending: 'Gasto Total',
-        monthlyTotal: 'Total Mensual',
+        totalSpending: 'Burn Rate Mensual',
+        monthlyTotal: 'Quema Mensual',
         yearlyTotal: 'Total Anual',
         perMonth: 'por mes',
         perYear: 'por año',
@@ -325,6 +337,12 @@ function init() {
         darkMode = true;
     }
 
+    // Load saved currency (independent of language)
+    const savedCurrency = localStorage.getItem('currency');
+    if (savedCurrency === 'USD' || savedCurrency === 'COP') {
+        currentCurrency = savedCurrency;
+    }
+
     // Show loading state briefly
     showLoading();
 
@@ -336,6 +354,7 @@ function init() {
         applyFilters();
         // Step 3: Apply language, theme, and dark mode
         applyLanguage();
+        applyCurrencyButton();
         applyDarkMode();
         // Step 4: Render charts
         renderCharts();
@@ -364,6 +383,31 @@ function toggleLanguage() {
     if (currentTab === 'budget') { renderBudgetMonthStats(); renderSpendingList(); }
     if (currentTab === 'overview') { renderOverview(); }
     console.log(`Language switched to: ${currentLanguage}`);
+}
+
+// Select currency directly from the dropdown
+function selectCurrency(code) {
+    if (!currencies[code]) return;
+    currentCurrency = code;
+    localStorage.setItem('currency', currentCurrency);
+    applyCurrencyButton();
+    applyFilters();
+    renderCharts();
+    if (currentTab === 'budget') { renderBudgetMonthStats(); renderSpendingList(); }
+    if (currentTab === 'overview') { renderOverview(); }
+}
+
+// Sync the dropdown to the current currency state and update currency-dependent labels
+function applyCurrencyButton() {
+    const select = document.getElementById('currency-toggle');
+    if (select) select.value = currentCurrency;
+
+    // BUG-003: Update cost label and burn rate badge to reflect selected currency
+    const labelCost = document.getElementById('label-cost');
+    if (labelCost) labelCost.textContent = t('labelCost') + ` (${currentCurrency})`;
+
+    const burnRateBadge = document.getElementById('burn-rate-currency');
+    if (burnRateBadge) burnRateBadge.textContent = `${getCurrentCurrency().flag} ${currentCurrency}`;
 }
 
 // Toggle dark mode
@@ -419,7 +463,7 @@ function applyLanguage() {
     // Update form
     document.getElementById('form-title').textContent = editingId ? t('formTitleEdit') : t('formTitle');
     document.getElementById('label-name').textContent = t('labelName');
-    document.getElementById('label-cost').textContent = t('labelCost');
+    document.getElementById('label-cost').textContent = t('labelCost') + ` (${currentCurrency})`;
     document.getElementById('label-cycle').textContent = t('labelCycle');
     document.getElementById('label-category').textContent = t('labelCategory');
     nameInput.placeholder = t('placeholderName');
@@ -461,6 +505,11 @@ function applyLanguage() {
     updateTabLabels();
     updateBudgetLanguage();
 
+    // BUG-002: Update browser tab title based on language
+    document.title = isSpanish
+        ? 'SubTracker — Tu Presupuesto de Suscripciones'
+        : 'SubTracker — Your Subscription Budget';
+
     // Apply Comuna 13 theme for Spanish
     applyTheme(isSpanish);
 }
@@ -493,6 +542,7 @@ function applyTheme(isSpanish) {
     const submitBtn = document.getElementById('submit-btn');
     const exportBtn = document.getElementById('export-btn');
     const langToggle = document.getElementById('lang-toggle');
+    const currencyToggle = document.getElementById('currency-toggle');
 
     if (isSpanish) {
         // Comuna 13 Theme - Vibrant graffiti colors
@@ -513,6 +563,7 @@ function applyTheme(isSpanish) {
         submitBtn.className = 'flex-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:via-orange-600 hover:to-pink-600 text-white font-semibold py-3.5 px-6 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] shadow-xl';
         exportBtn.className = 'px-4 py-2.5 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-medium rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg whitespace-nowrap';
         langToggle.className = 'flex items-center gap-2 px-4 py-2 bg-white/95 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border-2 border-yellow-400';
+        if (currencyToggle) currencyToggle.className = 'px-4 py-2 bg-white/95 rounded-full shadow-md border-2 border-yellow-400 font-medium text-gray-700 cursor-pointer outline-none appearance-none pr-8 transition-all duration-200';
     } else if (darkMode) {
         // Dark mode theme
         body.className = 'bg-gray-900 min-h-screen py-8 px-4 sm:py-12 transition-all duration-500';
@@ -527,6 +578,7 @@ function applyTheme(isSpanish) {
         submitBtn.className = 'flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3.5 px-6 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]';
         exportBtn.className = 'px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg whitespace-nowrap';
         langToggle.className = 'flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-700 hover:border-gray-600';
+        if (currencyToggle) currencyToggle.className = 'px-4 py-2 bg-gray-800 rounded-full shadow-md border border-gray-700 font-medium text-gray-200 cursor-pointer outline-none appearance-none pr-8 transition-all duration-200';
     } else {
         // Default Light Theme - Clean and professional
         body.className = 'bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-8 px-4 sm:py-12 transition-all duration-500';
@@ -541,6 +593,7 @@ function applyTheme(isSpanish) {
         submitBtn.className = 'flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3.5 px-6 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]';
         exportBtn.className = 'px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg whitespace-nowrap';
         langToggle.className = 'flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300';
+        if (currencyToggle) currencyToggle.className = 'px-4 py-2 bg-white rounded-full shadow-md border border-gray-200 hover:border-gray-300 font-medium text-gray-700 cursor-pointer outline-none appearance-none pr-8 transition-all duration-200';
     }
 
     // Update charts title color
@@ -724,6 +777,22 @@ function applyFilters() {
 
     renderSubscriptions();
     renderTotal();
+
+    // BUG-007: Disable Export CSV button when no subscriptions exist
+    const exportBtn = document.getElementById('export-btn');
+    if (exportBtn) {
+        if (subscriptions.length === 0) {
+            exportBtn.disabled = true;
+            exportBtn.title = t('exportEmpty') || 'Add subscriptions first';
+            exportBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            exportBtn.classList.remove('hover:shadow-lg');
+        } else {
+            exportBtn.disabled = false;
+            exportBtn.title = '';
+            exportBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            exportBtn.classList.add('hover:shadow-lg');
+        }
+    }
 }
 
 // Export to CSV
@@ -846,6 +915,8 @@ function editSubscription(id) {
     if (!sub) return;
 
     editingId = id;
+    const editIdInput = document.getElementById('edit-id');
+    if (editIdInput) editIdInput.value = id; // BUG-009: keep hidden input in sync
 
     // Populate form
     nameInput.value = sub.name;
@@ -901,6 +972,9 @@ function cancelEdit() {
 // Clear form and reset edit state
 function clearForm() {
     editingId = null;
+    // BUG-009: Also reset the hidden input (edit-id is a backup ID holder, not actively read, but reset for hygiene)
+    const editIdInput = document.getElementById('edit-id');
+    if (editIdInput) editIdInput.value = '';
     nameInput.value = '';
     costInput.value = '';
     billingCycleInput.value = 'monthly';
@@ -1012,28 +1086,25 @@ function getCategoryBadge(category) {
     return badges[category] || badges['other'];
 }
 
-// Delete subscription
+// Delete subscription — with Zombie Shredder animation
 function deleteSubscription(id) {
-    // Find the subscription we're about to delete (for logging)
-    const subToDelete = subscriptions.find(sub => sub.id === id);
+    if (!confirm(t('confirmDelete'))) return;
 
-    if (confirm(t('confirmDelete'))) {
-        // Remove subscription with matching id
+    const card = document.querySelector(`[data-sub-id="${id}"]`);
+
+    const doDelete = () => {
         subscriptions = subscriptions.filter(sub => sub.id !== id);
-
-        // Debug logging
-        console.log('Deleted:', subToDelete);
-        console.log('Remaining subscriptions:', subscriptions);
-
-        // If we were editing this subscription, cancel edit
-        if (editingId === id) {
-            cancelEdit();
-        }
-
-        // Save to localStorage after deleting
+        if (editingId === id) cancelEdit();
         saveToLocalStorage();
         applyFilters();
         renderCharts();
+    };
+
+    if (card) {
+        card.classList.add('zombie-shred');
+        card.addEventListener('animationend', doDelete, { once: true });
+    } else {
+        doDelete();
     }
 }
 
@@ -1096,7 +1167,7 @@ function renderSubscriptions() {
         const monthlyEquiv = getMonthlyEquivalent(sub.cost, billingCycle);
 
         return `
-        <div class="${cardBg} ${isSpanish ? 'border-2' : 'border'} rounded-xl shadow-md hover:shadow-xl p-5 sm:p-6 mb-4 ${cardBorder} transition-all duration-300 hover:scale-[1.01]">
+        <div data-sub-id="${sub.id}" class="${cardBg} ${isSpanish ? 'border-2' : 'border'} rounded-xl shadow-md hover:shadow-xl p-5 sm:p-6 mb-4 ${cardBorder} transition-all duration-300 hover:scale-[1.01]">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
                 <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
@@ -1209,7 +1280,7 @@ function renderTotal() {
                     </div>
                     <h2 class="text-xl sm:text-2xl font-bold">${t('totalSpending')}</h2>
                 </div>
-                <p class="text-center text-sm opacity-75 mb-6">${isSpanish ? '🇨🇴' : '🇺🇸'} ${currency.code}</p>
+                <p class="text-center text-sm opacity-75 mb-6">${currency.flag} ${currency.code}</p>
 
                 <!-- Totals Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
@@ -1348,19 +1419,41 @@ function updateTabLabels() {
 
 function updateBudgetLanguage() {
     const el = (id) => document.getElementById(id);
-    if (el('income-card-title')) el('income-card-title').textContent = '💵 ' + bt('monthlyIncome');
-    if (el('income-card-desc'))  el('income-card-desc').textContent  = bt('incomeDesc');
-    if (el('income-save-text'))  el('income-save-text').textContent  = bt('saveIncome');
+    if (el('income-card-title'))  el('income-card-title').textContent  = '💵 ' + bt('monthlyIncome');
+    if (el('income-card-desc'))   el('income-card-desc').textContent   = bt('incomeDesc');
+    if (el('income-save-text'))   el('income-save-text').textContent   = bt('saveIncome');
+    // Labels
     if (el('label-expense-name'))     el('label-expense-name').textContent     = bt('expenseName');
-    if (el('label-expense-amount'))   el('label-expense-amount').textContent   = bt('expenseAmount');
+    if (el('label-expense-amount'))   el('label-expense-amount').textContent   = bt('expenseAmount') + ' (' + currentCurrency + ')';
     if (el('label-expense-category')) el('label-expense-category').textContent = bt('expenseCategory');
     if (el('label-expense-date'))     el('label-expense-date').textContent     = bt('expenseDate');
     if (el('label-expense-note'))     el('label-expense-note').textContent     = bt('expenseNote');
-    if (el('overview-chart-title'))   el('overview-chart-title').textContent   = bt('overviewChart');
-    // Update income display if visible
+    // Placeholders (BUG-001)
+    if (el('spending-name'))   el('spending-name').placeholder   = bt('expenseNamePlaceholder');
+    if (el('spending-amount')) el('spending-amount').placeholder = bt('expenseAmountPlaceholder');
+    if (el('spending-note'))   el('spending-note').placeholder   = bt('expenseNotePlaceholder');
+    // Income placeholder (BUG-006)
+    if (el('income-input'))    el('income-input').placeholder    = getIncomePlaceholder();
+    // Form title + button (BUG-001)
+    if (el('spending-form-title')) el('spending-form-title').textContent = '➕ ' + bt('addExpenseTitle');
+    if (el('spending-submit-text')) el('spending-submit-text').innerHTML = `
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>${bt('addExpenseBtn')}`;
+    if (el('spending-cancel-btn')) el('spending-cancel-btn').textContent = bt('cancelExpenseBtn');
+    // Charts + overview
+    if (el('overview-chart-title'))  el('overview-chart-title').textContent  = bt('overviewChart');
+    if (el('overview-chart-empty'))  el('overview-chart-empty').textContent  = bt('noOverviewData');
+    // Income display if visible
     if (monthlyIncome > 0 && el('income-display-text')) {
         el('income-display-text').textContent = bt('incomeConfirm') + formatCurrency(monthlyIncome) + bt('perMonth');
     }
+}
+
+// Dynamic income placeholder based on currency (BUG-006)
+function getIncomePlaceholder() {
+    const defaults = { USD: '6,000', COP: '8.000.000', MXN: '20,000', ARS: '600,000', EUR: '5,000', CRC: '3,000,000', CLP: '1,500,000' };
+    return defaults[currentCurrency] || '6,000';
 }
 
 // =============================================

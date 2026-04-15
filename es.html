@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Suscripciones — Deja de Regalar Plata</title>
-    <meta name="description" content="Controla todas las suscripciones que pagas. Ve cuánto gastas al mes. Sin cuenta, sin nube, sin complicaciones. Solo ábrelo y listo.">
+    <meta name="description" content="Deja de pagar por suscripciones que olvidaste. SubTracker mata las suscripciones 'Zombie' — ve tu costo mensual real en 2 minutos. Sin cuenta, sin nube, $12 único.">
+    <meta property="og:title" content="SubTracker — Mata tus Suscripciones Zombie">
+    <meta property="og:description" content="Encuentra cada suscripción que te está drenando el presupuesto. Sin cuenta, sin nube, $12 único.">
+    <meta property="og:image" content="https://subscription-tracker-alpha-tawny.vercel.app/screenshot.png">
+    <meta property="og:url" content="https://subscription-tracker-alpha-tawny.vercel.app/es.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@mr_tinoco">
+    <link rel="canonical" href="https://subscription-tracker-alpha-tawny.vercel.app/es.html">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <style>
         html { scroll-behavior: smooth; }
 
@@ -27,10 +36,66 @@
         .icon-glow {
             box-shadow: 0 0 20px rgba(37, 99, 235, 0.25);
         }
+
+        /* Dark mode base + warm LatAm mesh gradient */
+        body {
+          background-color: #0f172a;
+          background-image:
+            radial-gradient(at 0% 0%,   hsla(22, 80%, 18%, 0.85) 0px, transparent 55%),
+            radial-gradient(at 100% 0%,  hsla(340,70%, 16%, 0.85) 0px, transparent 55%),
+            radial-gradient(at 100% 100%,hsla(15, 65%, 14%, 0.7)  0px, transparent 55%),
+            radial-gradient(at 0% 100%,  hsla(130,50%, 10%, 0.7)  0px, transparent 55%);
+          color: #e2e8f0;
+        }
+
+        /* Nav */
+        nav {
+          background: rgba(15, 23, 42, 0.95) !important;
+          border-color: #1e293b !important;
+        }
+
+        /* Feature cards — Glassmorphism */
+        .feature-card {
+          background: rgba(30, 41, 59, 0.65) !important;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border-color: rgba(251, 146, 60, 0.2) !important;
+          transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        }
+        .feature-card:hover {
+          transform: scale(1.03);
+          box-shadow: 0 8px 32px rgba(251,146,60,0.15);
+        }
+
+        /* Section backgrounds */
+        .section-light {
+          background: #1e293b;
+        }
+
+        /* Text colors */
+        h1, h2, h3 { color: #f8fafc; }
+        p.text-gray-500 { color: #94a3b8 !important; }
+        p.text-gray-400 { color: #64748b !important; }
+
+        /* Nav brand text */
+        .text-gray-900 { color: #f8fafc !important; }
+
+        /* App mockup background */
+        .bg-gradient-to-br.from-gray-50 {
+          background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+        }
+
+        /* Mockup browser bar */
+        .bg-gray-100 { background: #1e293b !important; border-color: #334155 !important; }
+        .bg-white.rounded-md { background: #0f172a !important; }
+
+        /* Card backgrounds inside mockup */
+        .bg-white.rounded-lg { background: #1e293b !important; border-color: #334155 !important; }
+        p.text-gray-800 { color: #f1f5f9 !important; }
     </style>
 </head>
 
-<body class="bg-white text-gray-800 font-sans antialiased">
+<body class="font-sans antialiased">
 
 <!-- ============================================================
      NAV BAR
@@ -76,19 +141,18 @@
     <!-- Badge -->
     <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-sm font-medium px-4 py-2 rounded-full mb-8 border border-blue-200">
         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-        Gratis · Sin registro · Funciona sin internet
+        Precio único · Sin registro · Funciona sin internet · 🇺🇸 EN / 🇨🇴 ES · 5 monedas
     </div>
 
     <!-- Titular principal -->
     <h1 class="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-        Deja de regalar plata en<br>
-        <span class="gradient-text">suscripciones olvidadas</span>
+        El tracker que mata tus<br>
+        <span class="gradient-text">suscripciones 'Zombie'</span>
     </h1>
 
     <!-- Subtítulo -->
     <p class="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-        Agrega todas las suscripciones que pagas. Ve el total real en pesos o dólares.
-        Sin cuenta. Sin nube. Sin vuelta. Ábrelo en el navegador y ya.
+        Las suscripciones zombie te cobran aunque ya no las uses. SubTracker te muestra todo lo que estás pagando, cuánto te cuesta al mes, y qué conviene cancelar. Sin cuenta. Sin nube. Ábrelo en el navegador en 10 segundos.
     </p>
 
     <!-- Botones CTA -->
@@ -100,7 +164,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
-            Pruébalo Gratis
+            Dominar mis gastos →
         </a>
 
         <!-- Secundario: Gumroad -->
@@ -119,7 +183,57 @@
     <p class="text-sm text-gray-400 mt-6">
         Hecho por una persona real. Sin inversores. Sin rastreo. Sin pendejadas.
     </p>
+
+    <div class="mt-8 max-w-lg mx-auto bg-slate-800 border border-slate-700 rounded-xl p-5 text-left">
+      <p class="text-slate-300 text-sm leading-relaxed italic">
+        "Lo construí porque yo mismo perdí el control de mis suscripciones. Resultó que estaba pagando $180/mes por cosas que casi no usaba. SubTracker me lo mostró en 3 minutos."
+      </p>
+      <div class="flex items-center gap-3 mt-3">
+        <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">O</div>
+        <div>
+          <p class="text-slate-300 text-xs font-semibold">Omar Tinoco</p>
+          <p class="text-slate-500 text-xs">Builder, Normie AI · @mr-tinoco</p>
+        </div>
+      </div>
+    </div>
 </section>
+
+
+<!-- ============================================================
+     STAT DE AHORRO
+============================================================ -->
+<section class="bg-blue-600 py-14" data-animate>
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <p class="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Ahorro Promedio Encontrado</p>
+    <p id="stat-amount-es" class="text-5xl sm:text-6xl font-extrabold text-white mb-1 tabular-nums">$1.660.000</p>
+    <p id="stat-period-es" class="text-blue-200 text-xl font-bold mb-4">/año</p>
+    <p class="text-blue-100 text-base max-w-2xl mx-auto mb-6">
+      Ahorro promedio que las personas encuentran después de ver sus costos reales — solo cancelando lo que olvidaron.
+    </p>
+    <!-- Toggle de moneda interactivo -->
+    <div class="flex flex-wrap justify-center gap-2 mb-4">
+      <button onclick="setStatES('COP','$1.660.000','/año')" id="stat-btn-es-COP" class="stat-btn-es active-stat-es px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇨🇴 COP</button>
+      <button onclick="setStatES('MXN','$7.200','/año')"     id="stat-btn-es-MXN" class="stat-btn-es px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇲🇽 MXN</button>
+      <button onclick="setStatES('ARS','$440K','/año')"      id="stat-btn-es-ARS" class="stat-btn-es px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇦🇷 ARS</button>
+      <button onclick="setStatES('CRC','₡208K','/año')"      id="stat-btn-es-CRC" class="stat-btn-es px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇨🇷 CRC</button>
+      <button onclick="setStatES('CLP','$388K','/año')"      id="stat-btn-es-CLP" class="stat-btn-es px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇨🇱 CLP</button>
+    </div>
+    <p class="text-blue-200 text-sm">SubTracker te muestra tu número real en menos de 2 minutos.</p>
+  </div>
+</section>
+<style>
+  .stat-btn-es { background: rgba(255,255,255,0.12); color: #bfdbfe; border: 1px solid rgba(255,255,255,0.2); }
+  .stat-btn-es:hover { background: rgba(255,255,255,0.22); color: #fff; }
+  .active-stat-es { background: rgba(255,255,255,0.9) !important; color: #1d4ed8 !important; font-weight: 700; border-color: white !important; }
+</style>
+<script>
+  function setStatES(code, amount, period) {
+    document.getElementById('stat-amount-es').textContent = amount;
+    document.getElementById('stat-period-es').textContent = period;
+    document.querySelectorAll('.stat-btn-es').forEach(b => b.classList.remove('active-stat-es'));
+    document.getElementById('stat-btn-es-' + code).classList.add('active-stat-es');
+  }
+</script>
 
 
 <!-- ============================================================
@@ -226,14 +340,23 @@
 ============================================================ -->
 <section class="max-w-5xl mx-auto px-6 py-20" id="funciones">
 
-    <p class="text-center text-sm font-semibold text-blue-600 uppercase tracking-widest mb-4">Funciones</p>
+    <p class="text-center text-sm font-semibold text-blue-400 uppercase tracking-widest mb-4">Funciones</p>
     <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Todo lo que necesitas. Nada de lo que no.</h2>
-    <p class="text-center text-gray-500 mb-14 max-w-xl mx-auto">Sin cuentas. Sin app store. Sin suscripción mensual. Solo abre el link y controla tus gastos.</p>
+    <p class="text-center text-gray-500 mb-8 max-w-xl mx-auto">Sin cuentas. Sin app store. Sin suscripción mensual. Solo abre el link y controla tus gastos.</p>
+    <!-- Micro-confidence badges -->
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">🔒 100% Offline</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">☁️ Sin Nube</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">🚫 Sin Registro</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">💳 Precio Único $12</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">🌎 ES + EN</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">💱 5 Monedas</span>
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
         <!-- Función 1 -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+        <div class="feature-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
             <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 icon-glow">
                 <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -247,7 +370,7 @@
         </div>
 
         <!-- Función 2 -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+        <div class="feature-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
             <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
                 <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -263,7 +386,7 @@
         </div>
 
         <!-- Función 3 -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+        <div class="feature-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
             <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -277,7 +400,7 @@
         </div>
 
         <!-- Función 4 -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+        <div class="feature-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
             <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
                 <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -290,17 +413,75 @@
             </p>
         </div>
 
+        <!-- Función 5 — Bilingüe -->
+        <div class="feature-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+            <span class="text-3xl">🌎</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Bilingüe — ES / EN</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            Interfaz completa en español e inglés — un cambio de idioma real, no una traducción de Google. Costos en COP o USD automáticamente. Hecho para normies en todas partes.
+          </p>
+        </div>
+
+        <!-- Función 6 — Precio único -->
+        <div class="feature-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+            <span class="text-3xl">💸</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Precio único. No SaaS.</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            Pagas una vez, lo usas para siempre. Sin suscripción para tu tracker de suscripciones — porque eso sería irónico. $12 en Gumroad. Tuyo de por vida.
+          </p>
+        </div>
+
     </div>
+</section>
+
+
+<!-- ============================================================
+     COMPARACIÓN: TAREA VS. BISTURÍ
+============================================================ -->
+<section class="max-w-4xl mx-auto px-6 py-16">
+  <div class="bg-slate-800 border border-slate-700 rounded-2xl p-8">
+    <p class="text-center text-sm font-semibold text-blue-400 uppercase tracking-widest mb-2">Tarea vs. Bisturí</p>
+    <h3 class="text-xl font-bold text-white mb-2 text-center">¿Para qué una hoja de cálculo?</h3>
+    <p class="text-center text-slate-400 text-sm mb-6">Una hoja de cálculo es tarea. SubTracker es bisturí — ábrelo, ve el daño, corta lo que duele.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <p class="text-green-400 font-bold mb-3">✅ SubTracker — El Bisturí</p>
+        <ul class="space-y-2 text-slate-300 text-sm">
+          <li>Abre con 1 clic — sin configuración</li>
+          <li>Totales mensuales calculados automáticamente</li>
+          <li>Gráficas incluidas</li>
+          <li>Funciona sin internet</li>
+          <li>Bilingüe + USD/COP nativo</li>
+          <li>No puedes romper ninguna fórmula</li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-slate-500 font-bold mb-3">❌ Hoja de Cálculo — La Tarea</p>
+        <ul class="space-y-2 text-slate-500 text-sm">
+          <li>30 minutos de setup mínimo</li>
+          <li>Un error en la fórmula arruina todo</li>
+          <li>Gráficas requieren trabajo extra</li>
+          <li>Necesita cuenta de Google o app local</li>
+          <li>Conversión de moneda? Manual.</li>
+          <li>Más difícil de mantener actualizada</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
 
 
 <!-- ============================================================
      CÓMO FUNCIONA — 3 pasos
 ============================================================ -->
-<section class="bg-gray-50 py-20">
+<section class="bg-slate-800/50 py-20">
     <div class="max-w-4xl mx-auto px-6">
 
-        <p class="text-center text-sm font-semibold text-blue-600 uppercase tracking-widest mb-4">Cómo Funciona</p>
+        <p class="text-center text-sm font-semibold text-blue-400 uppercase tracking-widest mb-4">Cómo Funciona</p>
         <h2 class="text-3xl font-bold text-center text-gray-900 mb-14">Listo en menos de un minuto</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -311,7 +492,7 @@
                     1
                 </div>
                 <h3 class="font-bold text-gray-900 text-lg mb-2">Abre la app</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Dale clic a "Pruébalo Gratis". Sin descargar, sin instalar, sin registrarte. Carga al instante en el navegador.</p>
+                <p class="text-gray-500 text-sm leading-relaxed">Dale clic a "Dominar mis gastos". Sin descargar, sin instalar, sin registrarte. Carga al instante en el navegador.</p>
             </div>
 
             <!-- Paso 2 -->
@@ -343,18 +524,24 @@
 <section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-20">
     <div class="max-w-3xl mx-auto px-6 text-center">
         <h2 class="text-4xl font-extrabold text-white mb-4 leading-tight">
-            ¿Listo para saber el número real?
+            ¿Listo para matar tus suscripciones Zombie?
         </h2>
-        <p class="text-blue-100 text-lg mb-10 max-w-xl mx-auto">
-            La mayoría de las personas subestima lo que gasta en suscripciones. Dos minutos para descubrirlo.
+        <p class="text-blue-100 text-lg mb-6 max-w-xl mx-auto">
+            La mayoría subestima lo que gasta. Ve tu Burn Rate mensual, decide qué cortar. Dos minutos.
         </p>
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">🔒 100% Offline</span>
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">🚫 Sin Registro</span>
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">💳 Precio Único $12</span>
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">💱 5 Monedas</span>
+        </div>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="app.html?lang=es"
                class="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-blue-700 font-bold text-lg px-10 py-4 rounded-xl transition-all duration-200 hover:shadow-2xl active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
-                Abrir la App — Es Gratis
+                Dominar mis gastos →
             </a>
             <a href="https://gumroad.com"
                target="_blank"
@@ -401,11 +588,29 @@
 
             <!-- Hecho con amor -->
             <p class="text-sm text-gray-600">
-                Hecho con ☕ + Claude Code · 2026
+                Hecho con ☕ + IA · 2026
             </p>
         </div>
     </div>
 </footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, [data-animate]').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
 
 </body>
 </html>

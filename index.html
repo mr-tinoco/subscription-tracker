@@ -4,9 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubTracker — Budget Tracker for Your Subscriptions | No Login. Works Offline.</title>
-    <meta name="description" content="Stop guessing where your money goes. SubTracker is the budget tracker that starts with subscriptions — the #1 place people overspend. Private, offline, one-time price.">
+    <meta name="description" content="Stop paying for subscriptions you forgot about. SubTracker kills 'Zombie' subscriptions — see your real monthly cost in 2 minutes. No login, no cloud, $12 one-time.">
+    <meta property="og:title" content="SubTracker — Kill Your Zombie Subscriptions">
+    <meta property="og:description" content="Find every subscription draining your budget. No login, no cloud, $12 one-time.">
+    <meta property="og:image" content="https://subscription-tracker-alpha-tawny.vercel.app/screenshot.png">
+    <meta property="og:url" content="https://subscription-tracker-alpha-tawny.vercel.app">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@mr_tinoco">
+    <link rel="canonical" href="https://subscription-tracker-alpha-tawny.vercel.app">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <style>
         /* Smooth scroll for anchor links */
         html { scroll-behavior: smooth; }
@@ -33,9 +42,14 @@
             box-shadow: 0 0 20px rgba(37, 99, 235, 0.25);
         }
 
-        /* Dark mode base */
+        /* Dark mode base + cool mesh gradient (EU/Default) */
         body {
           background-color: #0f172a;
+          background-image:
+            radial-gradient(at 0% 0%,   hsla(253,70%,18%,0.85) 0px, transparent 55%),
+            radial-gradient(at 100% 0%,  hsla(215,80%,14%,0.85) 0px, transparent 55%),
+            radial-gradient(at 100% 100%,hsla(263,60%,12%,0.7)  0px, transparent 55%),
+            radial-gradient(at 0% 100%,  hsla(200,70%,10%,0.7)  0px, transparent 55%);
           color: #e2e8f0;
         }
 
@@ -45,10 +59,17 @@
           border-color: #1e293b !important;
         }
 
-        /* Feature cards */
+        /* Feature cards — Glassmorphism */
         .feature-card {
-          background: #1e293b !important;
-          border-color: #334155 !important;
+          background: rgba(30, 41, 59, 0.65) !important;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border-color: rgba(99, 102, 241, 0.18) !important;
+          transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        }
+        .feature-card:hover {
+          transform: scale(1.03);
+          box-shadow: 0 8px 32px rgba(99,102,241,0.18);
         }
 
         /* Section backgrounds */
@@ -106,7 +127,7 @@
             <!-- Spanish landing page toggle -->
             <a href="es.html"
                class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-sm font-medium text-gray-600">
-                <span>🇪🇸</span>
+                <span>🇨🇴</span>
                 <span class="hidden sm:inline">Español</span>
             </a>
             <!-- Open App CTA -->
@@ -128,18 +149,18 @@
     <!-- Badge -->
     <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-sm font-medium px-4 py-2 rounded-full mb-8 border border-blue-200">
         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-        One-time price · No login required · Works offline · 🇺🇸 EN / 🇪🇸 ES · USD & COP
+        One-time price · No login required · Works offline · 🇺🇸 EN / 🇨🇴 ES · USD & COP
     </div>
 
     <!-- Main headline -->
     <h1 class="text-5xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-        The budget tracker that<br>
-        <span class="gradient-text">starts with subscriptions</span>
+        The budget tracker that kills your<br>
+        <span class="gradient-text">'Zombie' subscriptions</span>
     </h1>
 
     <!-- Subheadline -->
     <p class="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-        Subscriptions are where most people overspend without realizing it. SubTracker shows you exactly what you're paying, what it's costing your budget, and what to cut. No login. No cloud. Open in your browser in 10 seconds.
+        Zombie subscriptions keep charging you long after you stopped using them. SubTracker surfaces every service draining your budget, shows you the real monthly cost, and helps you decide what to cut. No login. No cloud. Open in your browser in 10 seconds.
     </p>
 
     <!-- CTA Buttons -->
@@ -147,11 +168,11 @@
         <!-- Primary: Open the free app -->
         <a href="app.html"
            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-8 py-4 rounded-xl transition-all duration-200 hover:shadow-xl active:scale-95">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
-            Start Budgeting — It's Free
+            Take Control — Free →
         </a>
 
         <!-- Secondary: Gumroad link (update URL when listing is live) -->
@@ -192,17 +213,37 @@
 ============================================================ -->
 <section class="bg-blue-600 py-14" data-animate>
   <div class="max-w-4xl mx-auto px-6 text-center">
-    <p class="text-4xl sm:text-5xl font-extrabold text-white mb-4">
-      $273<span class="text-blue-200">/month</span>
+    <p class="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Average Savings Found</p>
+    <p id="stat-amount" class="text-5xl sm:text-6xl font-extrabold text-white mb-1 tabular-nums">$400</p>
+    <p id="stat-period" class="text-blue-200 text-xl font-bold mb-4">/year</p>
+    <p class="text-blue-100 text-base max-w-2xl mx-auto mb-6">
+      Average savings people find after seeing their real subscription costs — just by cancelling stuff they forgot about.
     </p>
-    <p class="text-blue-100 text-lg max-w-2xl mx-auto mb-3">
-      Average household subscription spend — most of it on services they barely use.
-    </p>
-    <p class="text-blue-200 text-base">
-      SubTracker shows you your real number in under 2 minutes.
-    </p>
+    <!-- Interactive currency toggle -->
+    <div class="flex flex-wrap justify-center gap-2 mb-4">
+      <button onclick="setStat('USD','$400','/year')"    id="stat-btn-USD" class="stat-btn active-stat px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇺🇸 USD</button>
+      <button onclick="setStat('COP','$1.66M','/año')"  id="stat-btn-COP" class="stat-btn px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇨🇴 COP</button>
+      <button onclick="setStat('MXN','$7,200','/año')"  id="stat-btn-MXN" class="stat-btn px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇲🇽 MXN</button>
+      <button onclick="setStat('ARS','$440K','/año')"   id="stat-btn-ARS" class="stat-btn px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇦🇷 ARS</button>
+      <button onclick="setStat('CRC','₡208K','/año')"   id="stat-btn-CRC" class="stat-btn px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇨🇷 CRC</button>
+      <button onclick="setStat('CLP','$388K','/año')"   id="stat-btn-CLP" class="stat-btn px-3 py-1.5 rounded-full text-sm font-semibold transition-all">🇨🇱 CLP</button>
+    </div>
+    <p class="text-blue-200 text-sm">SubTracker shows you your real number in under 2 minutes.</p>
   </div>
 </section>
+<style>
+  .stat-btn { background: rgba(255,255,255,0.12); color: #bfdbfe; border: 1px solid rgba(255,255,255,0.2); }
+  .stat-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+  .active-stat { background: rgba(255,255,255,0.9) !important; color: #1d4ed8 !important; font-weight: 700; border-color: white !important; }
+</style>
+<script>
+  function setStat(code, amount, period) {
+    document.getElementById('stat-amount').textContent = amount;
+    document.getElementById('stat-period').textContent = period;
+    document.querySelectorAll('.stat-btn').forEach(b => b.classList.remove('active-stat'));
+    document.getElementById('stat-btn-' + code).classList.add('active-stat');
+  }
+</script>
 
 
 <!-- ============================================================
@@ -319,7 +360,16 @@
 
     <p class="text-center text-sm font-semibold text-blue-600 uppercase tracking-widest mb-4">Features</p>
     <h2 class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-4">Budget clarity. Starting with subscriptions.</h2>
-    <p class="text-center text-gray-500 mb-14 max-w-xl mx-auto">Subscriptions are the easiest place to start budgeting. SubTracker makes it instant. No accounts, no apps, no monthly fee.</p>
+    <p class="text-center text-gray-500 mb-8 max-w-xl mx-auto">Subscriptions are the easiest place to start budgeting. SubTracker makes it instant. No accounts, no apps, no monthly fee.</p>
+    <!-- Micro-confidence trust badges -->
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">🔒 100% Offline</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">☁️ No Cloud</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">🚫 No Login</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">💳 One-Time $12</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">🌎 EN + ES</span>
+      <span class="flex items-center gap-1.5 bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-full">💱 6 Currencies</span>
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
@@ -399,10 +449,12 @@
 ============================================================ -->
 <section class="max-w-4xl mx-auto px-6 py-16" data-animate>
   <div class="bg-slate-800 border border-slate-700 rounded-2xl p-8">
-    <h3 class="text-xl font-bold text-white mb-6 text-center">Why not just use a spreadsheet?</h3>
+    <p class="text-center text-sm font-semibold text-blue-400 uppercase tracking-widest mb-2">Homework vs. Scalpel</p>
+    <h3 class="text-xl font-bold text-white mb-2 text-center">Why not just use a spreadsheet?</h3>
+    <p class="text-center text-slate-400 text-sm mb-6">A spreadsheet is homework. SubTracker is a scalpel — open it, see the damage, cut what hurts.</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <div>
-        <p class="text-green-400 font-bold mb-3">✅ SubTracker</p>
+        <p class="text-green-400 font-bold mb-3">✅ SubTracker — The Scalpel</p>
         <ul class="space-y-2 text-slate-300 text-sm">
           <li>Opens in 1 click — no setup</li>
           <li>Monthly totals calculated automatically</li>
@@ -413,7 +465,7 @@
         </ul>
       </div>
       <div>
-        <p class="text-slate-500 font-bold mb-3">❌ Spreadsheet</p>
+        <p class="text-slate-500 font-bold mb-3">❌ Spreadsheet — The Homework</p>
         <ul class="space-y-2 text-slate-500 text-sm">
           <li>30 min setup minimum</li>
           <li>Manual formulas = one typo breaks everything</li>
@@ -445,7 +497,7 @@
                     1
                 </div>
                 <h3 class="font-bold text-gray-900 text-lg mb-2">Open SubTracker</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">Click "Start Budgeting." No download, no install, no sign-up. Loads instantly in your browser.</p>
+                <p class="text-gray-500 text-sm leading-relaxed">Click "Take Control — Free →". No download, no install, no sign-up. Loads instantly in your browser.</p>
             </div>
 
             <!-- Step 2 -->
@@ -477,18 +529,24 @@
 <section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-20" data-animate>
     <div class="max-w-3xl mx-auto px-6 text-center">
         <h2 class="text-4xl font-extrabold text-white mb-4 leading-tight">
-            Ready to see what subscriptions are costing your budget?
+            Ready to kill your Zombie subscriptions?
         </h2>
-        <p class="text-blue-100 text-lg mb-10 max-w-xl mx-auto">
-            Most people are surprised. Add your subscriptions, see the real monthly number, and decide what to cut. Takes 2 minutes.
+        <p class="text-blue-100 text-lg mb-6 max-w-xl mx-auto">
+            Most people are surprised. See your Monthly Burn Rate, decide what to cut. Takes 2 minutes.
         </p>
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">🔒 100% Offline</span>
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">🚫 No Login</span>
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">💳 One-Time $12</span>
+          <span class="bg-white/15 border border-white/25 text-white/90 text-xs font-semibold px-3 py-1 rounded-full">💱 6 Currencies</span>
+        </div>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="app.html"
                class="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-blue-700 font-bold text-lg px-10 py-4 rounded-xl transition-all duration-200 hover:shadow-2xl active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
-                Start Budgeting — Free →
+                Take Control — Free →
             </a>
             <a href="https://gumroad.com"
                target="_blank"
@@ -534,7 +592,7 @@
 
             <!-- Built with love -->
             <p class="text-sm text-gray-600">
-                Built by <a href="https://twitter.com/mr_tinoco" class="hover:text-white transition-colors">Omar Tinoco</a> · Normie AI · Made with ☕ + Claude Code · 2026
+                Built by <a href="https://twitter.com/mr_tinoco" class="hover:text-white transition-colors">Omar Tinoco</a> · Normie AI · Made with ☕ + AI · 2026
             </p>
         </div>
     </div>
