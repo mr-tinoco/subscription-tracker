@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SubTracker — Welcome Guide</title>
+  <style>
+    /* ── Print settings ── */
+    @page {
+      size: Letter;
+      margin: 0;
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { page-break-after: always; }
+      .page:last-child { page-break-after: avoid; }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      background: #e5e7eb;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+
+    /* ── Print button ── */
+    .print-bar {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 816px;
+    }
+    .print-bar p { color: #94a3b8; font-size: 14px; }
+    .print-bar strong { color: #e2e8f0; }
+    .btn-print {
+      margin-left: auto;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 10px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-print:hover { opacity: 0.88; }
+
+    /* ── Page shell (US Letter at 96 dpi = 816×1056px) ── */
+    .page {
+      width: 816px;
+      min-height: 1056px;
+      background: #0f172a;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* mesh gradient bg */
+    .page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(at 0% 0%,   hsla(253,70%,20%,0.85) 0px, transparent 55%),
+        radial-gradient(at 100% 100%, hsla(215,80%,16%,0.85) 0px, transparent 55%),
+        radial-gradient(at 100% 0%,  hsla(263,60%,14%,0.55) 0px, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* grid */
+    .page::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.07) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .page-content {
+      position: relative;
+      z-index: 1;
+      padding: 56px 64px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 1;
+    }
+
+    /* ─────────── PAGE 1 ─────────── */
+
+    /* Top badge */
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(37,99,235,0.18);
+      border: 1px solid rgba(99,102,241,0.35);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #a5b4fc;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      width: fit-content;
+      margin-bottom: 28px;
+    }
+
+    /* Logo row */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .logo-icon {
+      width: 58px;
+      height: 58px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+      flex-shrink: 0;
+    }
+    .logo-text {
+      font-size: 46px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, #c7d2fe 60%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: 19px;
+      color: rgba(203,213,225,0.85);
+      line-height: 1.5;
+      margin-bottom: 32px;
+      max-width: 560px;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(37,99,235,0.6), rgba(124,58,237,0.6), transparent);
+      margin-bottom: 32px;
+    }
+
+    /* App URL box */
+    .url-box {
+      background: rgba(37,99,235,0.12);
+      border: 1.5px solid rgba(99,102,241,0.4);
+      border-radius: 14px;
+      padding: 22px 28px;
+      margin-bottom: 36px;
+    }
+    .url-box-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.7);
+      margin-bottom: 8px;
+    }
+    .url-box-url {
+      font-size: 18px;
+      font-weight: 700;
+      color: #60a5fa;
+      letter-spacing: 0.3px;
+      word-break: break-all;
+    }
+    .url-box-note {
+      font-size: 13px;
+      color: rgba(148,163,184,0.65);
+      margin-top: 6px;
+    }
+
+    /* Steps grid */
+    .steps-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.65);
+      margin-bottom: 16px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+    .step {
+      background: rgba(30,41,59,0.65);
+      border: 1px solid rgba(99,102,241,0.18);
+      border-radius: 12px;
+      padding: 18px 18px 16px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .step h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+    }
+    .step p {
+      font-size: 12.5px;
+      color: rgba(148,163,184,0.8);
+      line-height: 1.5;
+    }
+
+    /* Features grid */
+    .features-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.65);
+      margin-bottom: 16px;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .feature-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .feature-text strong {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: block;
+      margin-bottom: 1px;
+    }
+    .feature-text span {
+      font-size: 12.5px;
+      color: rgba(148,163,184,0.75);
+      line-height: 1.4;
+    }
+
+    /* Footer strip */
+    .page-footer {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(99,102,241,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-footer-left {
+      font-size: 12px;
+      color: rgba(100,116,139,0.8);
+    }
+    .page-footer-left strong { color: rgba(148,163,184,0.9); }
+    .page-footer-right {
+      font-size: 12px;
+      color: rgba(100,116,139,0.7);
+    }
+
+    /* ─────────── PAGE 2 ─────────── */
+    .p2-heading {
+      font-size: 30px;
+      font-weight: 900;
+      color: #e2e8f0;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .p2-sub {
+      font-size: 16px;
+      color: rgba(148,163,184,0.75);
+      margin-bottom: 28px;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .tip-card {
+      background: rgba(30,41,59,0.65);
+      border: 1px solid rgba(99,102,241,0.18);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .tip-card .tip-emoji {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .tip-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 6px;
+    }
+    .tip-card p {
+      font-size: 13px;
+      color: rgba(148,163,184,0.8);
+      line-height: 1.55;
+    }
+
+    /* Bookmark this app section */
+    .bookmark-box {
+      background: rgba(37,99,235,0.1);
+      border: 1px solid rgba(99,102,241,0.28);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .bookmark-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .bookmark-box h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 3px;
+    }
+    .bookmark-box p {
+      font-size: 13px;
+      color: rgba(148,163,184,0.8);
+    }
+    .bookmark-box code {
+      background: rgba(99,102,241,0.2);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #a5b4fc;
+    }
+
+    /* Thank you box */
+    .thanks-box {
+      background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(124,58,237,0.15));
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 14px;
+      padding: 24px 28px;
+      text-align: center;
+      margin-top: auto;
+    }
+    .thanks-box h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #e2e8f0;
+      margin-bottom: 6px;
+    }
+    .thanks-box p {
+      font-size: 14px;
+      color: rgba(148,163,184,0.8);
+      line-height: 1.6;
+    }
+    .thanks-box .handle {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Print / save instructions ── -->
+<div class="print-bar no-print">
+  <p><strong>How to save as PDF:</strong> Click the button → Chrome print dialog opens → Change destination to <strong>"Save as PDF"</strong> → Save</p>
+  <button class="btn-print" onclick="window.print()">🖨 Print / Save as PDF</button>
+</div>
+
+
+<!-- ═══════════════════════════
+     PAGE 1 — Welcome + App Link
+═══════════════════════════ -->
+<div class="page">
+  <div class="page-content">
+
+    <!-- Badge -->
+    <div class="welcome-badge">🎉 &nbsp; Thank you for your purchase</div>
+
+    <!-- Logo -->
+    <div class="logo-row">
+      <div class="logo-icon">💰</div>
+      <span class="logo-text">SubTracker</span>
+    </div>
+    <p class="tagline">Your budget tracker for subscriptions — private, offline, and yours forever.</p>
+
+    <div class="divider"></div>
+
+    <!-- App URL -->
+    <div class="url-box">
+      <div class="url-box-label">Your app link</div>
+      <div class="url-box-url">https://subscription-tracker-alpha-tawny.vercel.app/app.html</div>
+      <div class="url-box-note">Bookmark this. Open it anytime — no login, no install, works in any browser.</div>
+    </div>
+
+    <!-- Get started steps -->
+    <div class="steps-title">Get started in 3 steps</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Open the link</h4>
+        <p>Click or type the URL above. No download or signup required — it loads instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Add subscriptions</h4>
+        <p>Name, cost, billing cycle (monthly/yearly/weekly), and category. Takes 10 seconds each.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>See your real total</h4>
+        <p>Your monthly burn rate updates in real time. The number will probably surprise you.</p>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features-title">What's included</div>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>Monthly burn rate</strong>
+          <span>Yearly & weekly costs auto-converted to a single monthly total.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>Charts by category</strong>
+          <span>Pie + bar charts — see where your budget actually goes.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>Search & filter</strong>
+          <span>Live search + category filter to find any subscription fast.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>Export to CSV</strong>
+          <span>Download your full list for Excel or Google Sheets anytime.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>EN / ES toggle</strong>
+          <span>Full bilingual UI — real Spanish, not a translation.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>6 currencies</strong>
+          <span>USD, COP, EUR, MXN, GBP, CAD — switch anytime.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>Dark mode</strong>
+          <span>Toggle dark/light — saved automatically to your browser.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-dot"></div>
+        <div class="feature-text">
+          <strong>100% offline & private</strong>
+          <span>All data stays in your browser. Nothing is sent anywhere.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="page-footer">
+      <div class="page-footer-left"><strong>SubTracker</strong> · by Normie AI · 2026</div>
+      <div class="page-footer-right">Page 1 of 2</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════
+     PAGE 2 — Tips + Thank You
+═══════════════════════════ -->
+<div class="page">
+  <div class="page-content">
+
+    <div class="p2-heading">Tips to get the most out of it</div>
+    <p class="p2-sub">Small habits that make SubTracker actually useful</p>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <span class="tip-emoji">🗓️</span>
+        <h4>Do a full audit first</h4>
+        <p>Add every subscription you can think of — streaming, software, cloud storage, news, fitness apps. Don't filter yet, just list everything. The total will surprise you.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-emoji">📊</span>
+        <h4>Use the category chart</h4>
+        <p>After adding everything, check the pie chart. Most people find one category is way larger than expected. That's where to cut first.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-emoji">📅</span>
+        <h4>Watch for yearly traps</h4>
+        <p>Yearly subscriptions feel cheap month-to-month but add up fast. SubTracker converts them all to monthly so you see the real impact.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-emoji">📤</span>
+        <h4>Export monthly</h4>
+        <p>Hit "Export CSV" once a month and open it in a spreadsheet. Track how your total changes over time — cancellations show up fast.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-emoji">🌐</span>
+        <h4>Use EN/ES toggle</h4>
+        <p>If you work in both English and Spanish, the language switch is in the top right. It's a full UI switch — every label, not just the interface chrome.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-emoji">💱</span>
+        <h4>Switch currencies anytime</h4>
+        <p>Living in Colombia or Mexico? Switch to COP or MXN to see your costs in local currency. The rate updates when you toggle.</p>
+      </div>
+    </div>
+
+    <!-- Bookmark reminder -->
+    <div class="bookmark-box">
+      <div class="bookmark-icon">🔖</div>
+      <div>
+        <h4>Bookmark the app URL — don't lose it</h4>
+        <p>Your data is saved in your browser's localStorage at <code>app.html</code>. If you clear browser data, your subscriptions will be gone. Export to CSV regularly as a backup.</p>
+      </div>
+    </div>
+
+    <!-- Thank you -->
+    <div class="thanks-box">
+      <h3>Thanks for supporting independent software 🙌</h3>
+      <p>
+        SubTracker is built and maintained by one person.<br>
+        Your purchase keeps it alive and free of VC money and tracking.
+      </p>
+      <p style="margin-top:10px; color:rgba(148,163,184,0.65); font-size:13px;">
+        Found a bug? Have a feature idea? Reach out anytime.
+      </p>
+      <span class="handle">@mr_tinoco · github.com/mr-tinoco · Normie AI</span>
+    </div>
+
+    <!-- Footer -->
+    <div class="page-footer" style="margin-top: 20px;">
+      <div class="page-footer-left"><strong>SubTracker</strong> · by Normie AI · 2026</div>
+      <div class="page-footer-right">Page 2 of 2</div>
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+</html>

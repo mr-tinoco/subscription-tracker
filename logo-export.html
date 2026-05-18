@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SubTracker Logo Generator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 28px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    canvas { border-radius: 16px; display: block; }
+    .btn {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.88; }
+    .note {
+      font-size: 13px;
+      color: #4b5563;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="logo" width="600" height="600"></canvas>
+<button class="btn" onclick="downloadLogo()">⬇ Download 600×600 PNG</button>
+<p class="note">Ready to upload directly to Gumroad</p>
+
+<script>
+const canvas = document.getElementById('logo');
+const ctx    = canvas.getContext('2d');
+const W = 600, H = 600;
+
+/* ── 1. Dark background ── */
+ctx.fillStyle = '#0f172a';
+ctx.fillRect(0, 0, W, H);
+
+/* ── 2. Radial gradient overlays ── */
+let g1 = ctx.createRadialGradient(0, 0, 0, 0, 0, 380);
+g1.addColorStop(0, 'hsla(253,70%,20%,0.9)');
+g1.addColorStop(1, 'hsla(253,70%,20%,0)');
+ctx.fillStyle = g1;
+ctx.fillRect(0, 0, W, H);
+
+let g2 = ctx.createRadialGradient(W, H, 0, W, H, 380);
+g2.addColorStop(0, 'hsla(215,80%,16%,0.9)');
+g2.addColorStop(1, 'hsla(215,80%,16%,0)');
+ctx.fillStyle = g2;
+ctx.fillRect(0, 0, W, H);
+
+/* ── 3. Subtle grid ── */
+ctx.strokeStyle = 'rgba(99,102,241,0.08)';
+ctx.lineWidth = 1;
+for (let x = 0; x <= W; x += 40) {
+  ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+}
+for (let y = 0; y <= H; y += 40) {
+  ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+}
+
+/* ── 4. Icon box (rounded square with blue-purple gradient) ── */
+const BOX_X = 185, BOX_Y = 100, BOX_SIZE = 230, BOX_R = 54;
+// Glow
+ctx.save();
+ctx.shadowColor = 'rgba(37,99,235,0.55)';
+ctx.shadowBlur  = 48;
+// Gradient fill
+let iconGrad = ctx.createLinearGradient(BOX_X, BOX_Y, BOX_X + BOX_SIZE, BOX_Y + BOX_SIZE);
+iconGrad.addColorStop(0, '#2563eb');
+iconGrad.addColorStop(1, '#7c3aed');
+roundRect(ctx, BOX_X, BOX_Y, BOX_SIZE, BOX_SIZE, BOX_R);
+ctx.fillStyle = iconGrad;
+ctx.fill();
+ctx.restore();
+
+/* ── 5. Credit card inside the icon box ── */
+const CX = BOX_X + 28, CY = BOX_Y + 62, CW = BOX_SIZE - 56, CH = 106;
+// Card body
+ctx.save();
+ctx.globalAlpha = 0.22;
+ctx.fillStyle = '#ffffff';
+roundRect(ctx, CX, CY, CW, CH, 14);
+ctx.fill();
+ctx.restore();
+
+ctx.save();
+ctx.globalAlpha = 0.65;
+ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+ctx.lineWidth = 2.5;
+roundRect(ctx, CX, CY, CW, CH, 14);
+ctx.stroke();
+ctx.restore();
+
+// Magnetic stripe
+ctx.save();
+ctx.globalAlpha = 0.25;
+ctx.fillStyle = '#ffffff';
+ctx.fillRect(CX, CY + 22, CW, 22);
+ctx.restore();
+
+// EMV chip
+ctx.save();
+ctx.globalAlpha = 0.6;
+ctx.fillStyle = 'rgba(255,255,255,0.55)';
+ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+ctx.lineWidth = 1.5;
+roundRect(ctx, CX + 14, CY + 56, 36, 24, 6);
+ctx.fill();
+ctx.stroke();
+ctx.restore();
+
+// Trend arrow (upward chart line)
+ctx.save();
+ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+ctx.lineWidth = 4.5;
+ctx.lineJoin = 'round';
+ctx.lineCap  = 'round';
+ctx.globalAlpha = 1;
+ctx.beginPath();
+ctx.moveTo(CX + 64,  CY + 78);
+ctx.lineTo(CX + 86,  CY + 60);
+ctx.lineTo(CX + 108, CY + 70);
+ctx.lineTo(CX + 130, CY + 48);
+ctx.stroke();
+// Arrow tip
+ctx.beginPath();
+ctx.moveTo(CX + 118, CY + 48);
+ctx.lineTo(CX + 130, CY + 48);
+ctx.lineTo(CX + 130, CY + 60);
+ctx.stroke();
+ctx.restore();
+
+/* ── 6. "SubTracker" wordmark ── */
+ctx.save();
+let txtGrad = ctx.createLinearGradient(100, 0, 500, 0);
+txtGrad.addColorStop(0,   '#ffffff');
+txtGrad.addColorStop(0.6, '#c7d2fe');
+txtGrad.addColorStop(1,   '#a5b4fc');
+ctx.fillStyle   = txtGrad;
+ctx.font        = '900 80px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.textAlign   = 'center';
+ctx.textBaseline = 'alphabetic';
+ctx.letterSpacing = '-2px';
+ctx.shadowColor = 'rgba(37,99,235,0.3)';
+ctx.shadowBlur  = 16;
+ctx.fillText('SubTracker', W / 2, 440);
+ctx.restore();
+
+/* ── 7. "by Normie AI" subtitle ── */
+ctx.save();
+ctx.fillStyle    = 'rgba(148,163,184,0.7)';
+ctx.font         = '500 19px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.textAlign    = 'center';
+ctx.textBaseline = 'alphabetic';
+ctx.letterSpacing = '4px';
+ctx.fillText('BY NORMIE AI', W / 2, 480);
+ctx.restore();
+
+/* ── 8. Bottom accent line ── */
+ctx.save();
+let lineGrad = ctx.createLinearGradient(160, 0, 440, 0);
+lineGrad.addColorStop(0,   'rgba(37,99,235,0)');
+lineGrad.addColorStop(0.3, 'rgba(37,99,235,0.8)');
+lineGrad.addColorStop(0.7, 'rgba(124,58,237,0.8)');
+lineGrad.addColorStop(1,   'rgba(124,58,237,0)');
+ctx.strokeStyle = lineGrad;
+ctx.lineWidth   = 2;
+ctx.beginPath();
+ctx.moveTo(160, 505);
+ctx.lineTo(440, 505);
+ctx.stroke();
+ctx.restore();
+
+/* ── Helper: rounded rectangle path ── */
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y,     x + w, y + r,     r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h,     x, y + h - r,     r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y,         x + r, y,         r);
+  ctx.closePath();
+}
+
+/* ── Download handler ── */
+function downloadLogo() {
+  const link = document.createElement('a');
+  link.download = 'subtracker-logo-600x600.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+</script>
+</body>
+</html>

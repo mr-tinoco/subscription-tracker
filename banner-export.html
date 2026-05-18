@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SubTracker Banner Generator — 1280×720</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0f1e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 28px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 40px;
+    }
+    canvas {
+      display: block;
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+    .btn {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 16px 44px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.88; }
+    .note { font-size: 13px; color: #4b5563; }
+  </style>
+</head>
+<body>
+
+<canvas id="banner" width="1280" height="720"></canvas>
+<button class="btn" onclick="download()">⬇ Download 1280×720 PNG</button>
+<p class="note">Ready to upload directly to Gumroad as the cover image</p>
+
+<script>
+const canvas = document.getElementById('banner');
+const ctx = canvas.getContext('2d');
+const W = 1280, H = 720;
+
+/* ─────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────── */
+function rr(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y,     x + w, y + r,     r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x,     y + h, x,       y + h - r, r);
+  ctx.lineTo(x,     y + r);
+  ctx.arcTo(x,     y,     x + r,   y,         r);
+  ctx.closePath();
+}
+
+/* ─────────────────────────────────────────
+   1. BACKGROUND
+───────────────────────────────────────── */
+ctx.fillStyle = '#0f172a';
+ctx.fillRect(0, 0, W, H);
+
+// Radial blobs
+const blobs = [
+  { cx: 0,    cy: 0,    r: 520, color: 'hsla(253,70%,20%,0.75)' },
+  { cx: W,    cy: H,    r: 480, color: 'hsla(215,80%,16%,0.75)' },
+  { cx: W,    cy: 0,    r: 380, color: 'hsla(263,60%,14%,0.55)' },
+  { cx: W*0.6, cy: H*0.5, r: 300, color: 'hsla(230,75%,18%,0.4)' },
+];
+blobs.forEach(b => {
+  const g = ctx.createRadialGradient(b.cx, b.cy, 0, b.cx, b.cy, b.r);
+  g.addColorStop(0, b.color);
+  g.addColorStop(1, 'hsla(0,0%,0%,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+});
+
+// Grid
+ctx.save();
+ctx.strokeStyle = 'rgba(99,102,241,0.07)';
+ctx.lineWidth = 1;
+for (let x = 0; x <= W; x += 48) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+for (let y = 0; y <= H; y += 48) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+ctx.restore();
+
+// Vertical divider glow (left/right split)
+ctx.save();
+const divG = ctx.createLinearGradient(0, 0, 0, H);
+divG.addColorStop(0,   'rgba(99,102,241,0)');
+divG.addColorStop(0.3, 'rgba(99,102,241,0.18)');
+divG.addColorStop(0.7, 'rgba(124,58,237,0.18)');
+divG.addColorStop(1,   'rgba(124,58,237,0)');
+ctx.strokeStyle = divG;
+ctx.lineWidth = 1;
+ctx.beginPath(); ctx.moveTo(665, 60); ctx.lineTo(665, H - 60); ctx.stroke();
+ctx.restore();
+
+/* ─────────────────────────────────────────
+   2. LEFT SIDE — COPY
+───────────────────────────────────────── */
+const LX = 72;  // left margin
+
+// "SubTracker" wordmark
+ctx.save();
+ctx.font = '900 90px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.textBaseline = 'alphabetic';
+
+// gradient text
+const nameG = ctx.createLinearGradient(LX, 0, LX + 560, 0);
+nameG.addColorStop(0,   '#ffffff');
+nameG.addColorStop(0.55, '#c7d2fe');
+nameG.addColorStop(1,   '#a5b4fc');
+ctx.fillStyle   = nameG;
+ctx.shadowColor = 'rgba(37,99,235,0.35)';
+ctx.shadowBlur  = 20;
+ctx.fillText('SubTracker', LX, 168);
+ctx.restore();
+
+// "by Normie AI" tag
+ctx.save();
+ctx.font = '600 15px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.fillStyle = 'rgba(148,163,184,0.65)';
+ctx.textBaseline = 'alphabetic';
+ctx.letterSpacing = '3px';
+ctx.fillText('BY NORMIE AI', LX + 2, 200);
+ctx.restore();
+
+// Tagline
+ctx.save();
+ctx.font = '400 28px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.fillStyle = 'rgba(203,213,225,0.9)';
+ctx.textBaseline = 'alphabetic';
+// wrap manually at ~38 chars
+ctx.fillText('Stop throwing money at', LX, 270);
+ctx.fillText('subscriptions you forgot about.', LX, 308);
+ctx.restore();
+
+// Accent line under tagline
+ctx.save();
+const accentG = ctx.createLinearGradient(LX, 0, LX + 200, 0);
+accentG.addColorStop(0, '#2563eb');
+accentG.addColorStop(1, 'rgba(124,58,237,0)');
+ctx.strokeStyle = accentG;
+ctx.lineWidth = 2.5;
+ctx.beginPath(); ctx.moveTo(LX, 326); ctx.lineTo(LX + 220, 326); ctx.stroke();
+ctx.restore();
+
+// Feature bullets
+const features = [
+  { icon: '💳', text: 'Track every subscription in one place' },
+  { icon: '📊', text: 'Charts + real monthly total — no math needed' },
+  { icon: '🔒', text: '100% offline — data never leaves your device' },
+  { icon: '🌐', text: 'Full EN / ES · USD, COP & 5 more currencies' },
+  { icon: '💸', text: 'One-time $12 · Not SaaS · Yours forever' },
+];
+
+ctx.save();
+ctx.font = '500 21px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.textBaseline = 'middle';
+features.forEach((f, i) => {
+  const fy = 386 + i * 48;
+  // bullet dot
+  const dotG = ctx.createLinearGradient(LX, fy, LX + 10, fy);
+  dotG.addColorStop(0, '#2563eb'); dotG.addColorStop(1, '#7c3aed');
+  ctx.fillStyle = dotG;
+  ctx.beginPath(); ctx.arc(LX + 6, fy, 5, 0, Math.PI * 2); ctx.fill();
+  // emoji
+  ctx.font = '20px serif';
+  ctx.fillText(f.icon, LX + 22, fy + 1);
+  // text
+  ctx.font = '500 21px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(203,213,225,0.88)';
+  ctx.fillText(f.text, LX + 52, fy);
+});
+ctx.restore();
+
+/* ─────────────────────────────────────────
+   3. RIGHT SIDE — APP MOCKUP
+───────────────────────────────────────── */
+const RX = 695;   // right panel start
+const PW = 520;   // panel width
+const PH = 580;   // panel height
+const PY = (H - PH) / 2;
+
+// Panel shadow + background
+ctx.save();
+ctx.shadowColor = 'rgba(37,99,235,0.25)';
+ctx.shadowBlur  = 60;
+ctx.shadowOffsetY = 12;
+rr(RX, PY, PW, PH, 24);
+ctx.fillStyle = 'rgba(30,41,59,0.75)';
+ctx.fill();
+ctx.restore();
+
+// Panel border
+ctx.save();
+rr(RX, PY, PW, PH, 24);
+ctx.strokeStyle = 'rgba(99,102,241,0.22)';
+ctx.lineWidth = 1.5;
+ctx.stroke();
+ctx.restore();
+
+// Titlebar strip
+ctx.save();
+rr(RX, PY, PW, 48, 24);
+const tbG = ctx.createLinearGradient(RX, PY, RX + PW, PY);
+tbG.addColorStop(0, 'rgba(37,99,235,0.5)');
+tbG.addColorStop(1, 'rgba(124,58,237,0.5)');
+ctx.fillStyle = tbG;
+ctx.fill();
+ctx.restore();
+// Round bottom of titlebar (cover the bottom radius)
+ctx.save();
+ctx.fillStyle = 'rgba(30,41,59,0.0)';
+ctx.fillRect(RX, PY + 24, PW, 24);
+ctx.restore();
+// Flat bottom edge of titlebar
+ctx.save();
+const tbFlat = ctx.createLinearGradient(RX, PY, RX + PW, PY);
+tbFlat.addColorStop(0, 'rgba(37,99,235,0.5)');
+tbFlat.addColorStop(1, 'rgba(124,58,237,0.5)');
+ctx.fillStyle = tbFlat;
+ctx.fillRect(RX, PY + 24, PW, 24);
+ctx.restore();
+
+// Titlebar text
+ctx.save();
+ctx.font = '700 15px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.fillStyle = 'rgba(255,255,255,0.9)';
+ctx.textBaseline = 'middle';
+ctx.fillText('💰  SubTracker', RX + 20, PY + 24);
+ctx.restore();
+
+// Traffic lights
+['#ff5f57','#febc2e','#28c840'].forEach((c, i) => {
+  ctx.save();
+  ctx.fillStyle = c;
+  ctx.beginPath();
+  ctx.arc(RX + PW - 24 - i * 22, PY + 24, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+});
+
+// ── Monthly total card ──
+const cardY = PY + 64;
+ctx.save();
+rr(RX + 20, cardY, PW - 40, 84, 14);
+const cardG = ctx.createLinearGradient(RX + 20, cardY, RX + PW - 20, cardY + 84);
+cardG.addColorStop(0, 'rgba(37,99,235,0.22)');
+cardG.addColorStop(1, 'rgba(124,58,237,0.18)');
+ctx.fillStyle = cardG;
+ctx.fill();
+ctx.strokeStyle = 'rgba(99,102,241,0.3)';
+ctx.lineWidth = 1;
+ctx.stroke();
+ctx.restore();
+
+ctx.save();
+ctx.font = '500 13px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.fillStyle = 'rgba(148,163,184,0.8)';
+ctx.textBaseline = 'alphabetic';
+ctx.fillText('MONTHLY BURN RATE', RX + 36, cardY + 26);
+ctx.font = '800 38px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+const totalG = ctx.createLinearGradient(RX + 36, 0, RX + 260, 0);
+totalG.addColorStop(0, '#60a5fa');
+totalG.addColorStop(1, '#a78bfa');
+ctx.fillStyle = totalG;
+ctx.fillText('$247.00 / mo', RX + 36, cardY + 66);
+ctx.restore();
+
+// "You might be overpaying" warning chip
+ctx.save();
+rr(RX + PW - 160, cardY + 28, 130, 28, 8);
+ctx.fillStyle = 'rgba(239,68,68,0.18)';
+ctx.fill();
+ctx.strokeStyle = 'rgba(239,68,68,0.4)';
+ctx.lineWidth = 1;
+ctx.stroke();
+ctx.font = '600 12px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.fillStyle = '#f87171';
+ctx.textBaseline = 'middle';
+ctx.fillText('⚠  Over budget', RX + PW - 152, cardY + 42);
+ctx.restore();
+
+// ── Subscription row items ──
+const subs = [
+  { name: 'Netflix',       cat: 'Entertainment', amount: '$15.99', color: '#ef4444' },
+  { name: 'Spotify',       cat: 'Music',          amount: '$10.99', color: '#22c55e' },
+  { name: 'Adobe CC',      cat: 'Software',       amount: '$59.99', color: '#f59e0b' },
+  { name: 'iCloud 200GB',  cat: 'Storage',        amount: '$2.99',  color: '#3b82f6' },
+  { name: 'ChatGPT Plus',  cat: 'AI Tools',       amount: '$20.00', color: '#8b5cf6' },
+  { name: 'NYT Digital',   cat: 'News',           amount: '$17.00', color: '#6366f1' },
+];
+
+const rowH = 54;
+subs.forEach((s, i) => {
+  const ry = cardY + 100 + i * rowH;
+  // Row bg (alternating)
+  ctx.save();
+  ctx.globalAlpha = i % 2 === 0 ? 0.04 : 0.0;
+  ctx.fillStyle = '#94a3b8';
+  rr(RX + 20, ry - 4, PW - 40, rowH - 2, 10);
+  ctx.fill();
+  ctx.restore();
+
+  // Separator line
+  if (i > 0) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(99,102,241,0.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(RX + 36, ry - 4);
+    ctx.lineTo(RX + PW - 36, ry - 4);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Color dot
+  ctx.save();
+  ctx.fillStyle = s.color;
+  ctx.shadowColor = s.color;
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.arc(RX + 40, ry + 20, 7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Service name
+  ctx.save();
+  ctx.font = '600 15px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(226,232,240,0.92)';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillText(s.name, RX + 60, ry + 22);
+  ctx.restore();
+
+  // Category tag
+  ctx.save();
+  rr(RX + 60, ry + 28, 76, 16, 4);
+  ctx.fillStyle = 'rgba(99,102,241,0.18)';
+  ctx.fill();
+  ctx.font = '500 10px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(148,163,184,0.8)';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(s.cat.toUpperCase(), RX + 66, ry + 36);
+  ctx.restore();
+
+  // Amount
+  ctx.save();
+  ctx.font = '700 15px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(226,232,240,0.85)';
+  ctx.textBaseline = 'alphabetic';
+  ctx.textAlign = 'right';
+  ctx.fillText(s.amount + '/mo', RX + PW - 36, ry + 22);
+  ctx.restore();
+});
+
+// ── Pie chart preview (partial, bottom of card) ──
+const PIE_CX = RX + PW - 72;
+const PIE_CY = PY + PH - 68;
+const PIE_R  = 44;
+
+const slices = [
+  { start: -Math.PI/2,              end: -Math.PI/2 + Math.PI*0.52, color: '#f59e0b' },
+  { start: -Math.PI/2 + Math.PI*0.52, end: -Math.PI/2 + Math.PI*0.86, color: '#ef4444' },
+  { start: -Math.PI/2 + Math.PI*0.86, end: -Math.PI/2 + Math.PI*1.18, color: '#8b5cf6' },
+  { start: -Math.PI/2 + Math.PI*1.18, end: -Math.PI/2 + Math.PI*1.44, color: '#22c55e' },
+  { start: -Math.PI/2 + Math.PI*1.44, end: -Math.PI/2 + Math.PI*2.0,  color: '#3b82f6' },
+];
+slices.forEach(s => {
+  ctx.save();
+  ctx.shadowColor = s.color;
+  ctx.shadowBlur  = 10;
+  ctx.fillStyle   = s.color;
+  ctx.beginPath();
+  ctx.moveTo(PIE_CX, PIE_CY);
+  ctx.arc(PIE_CX, PIE_CY, PIE_R, s.start, s.end);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // gap lines
+  ctx.save();
+  ctx.strokeStyle = 'rgba(15,23,42,0.85)';
+  ctx.lineWidth   = 2;
+  ctx.beginPath();
+  ctx.moveTo(PIE_CX, PIE_CY);
+  ctx.lineTo(PIE_CX + Math.cos(s.start) * PIE_R, PIE_CY + Math.sin(s.start) * PIE_R);
+  ctx.stroke();
+  ctx.restore();
+});
+
+// Donut hole
+ctx.save();
+ctx.fillStyle = 'rgba(30,41,59,0.92)';
+ctx.beginPath();
+ctx.arc(PIE_CX, PIE_CY, PIE_R * 0.48, 0, Math.PI * 2);
+ctx.fill();
+ctx.restore();
+
+// Pie label
+ctx.save();
+ctx.font = '600 11px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+ctx.fillStyle = 'rgba(148,163,184,0.75)';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('BY', PIE_CX, PIE_CY - 6);
+ctx.fillText('CAT', PIE_CX, PIE_CY + 6);
+ctx.restore();
+
+/* ─────────────────────────────────────────
+   4. BOTTOM BADGE ROW
+───────────────────────────────────────── */
+const badges = ['🔒 Offline & Private', '🚫 No Login', '🌐 EN / ES', '💱 6 Currencies', '💳 One-Time $12'];
+const BY = H - 42;
+let bx = LX;
+
+badges.forEach(text => {
+  ctx.font = '600 13px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+  const tw = ctx.measureText(text).width;
+  const bw = tw + 28;
+
+  ctx.save();
+  rr(bx, BY - 14, bw, 28, 8);
+  ctx.fillStyle   = 'rgba(99,102,241,0.14)';
+  ctx.strokeStyle = 'rgba(99,102,241,0.3)';
+  ctx.lineWidth   = 1;
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.save();
+  ctx.font = '600 13px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(199,210,254,0.85)';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, bx + 14, BY);
+  ctx.restore();
+
+  bx += bw + 10;
+});
+
+/* ─────────────────────────────────────────
+   5. DOWNLOAD
+───────────────────────────────────────── */
+function download() {
+  const a = document.createElement('a');
+  a.download = 'subtracker-banner-1280x720.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+window.download = download;
+</script>
+</body>
+</html>
